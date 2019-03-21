@@ -1,0 +1,13 @@
+#!/bin/bash
+INSTALLDIR=${1:-$HOME}
+
+# install dependencies
+sudo apt-get install git curl fonts-powerline
+
+ln -s $PWD/.vimrc $INSTALLDIR/.vimrc 2> /dev/null
+ln -s $PWD/.vim $INSTALLDIR/.vim 2> /dev/null
+ln -s $PWD/.tmux.conf $INSTALLDIR/.tmux.conf 2> /dev/null
+
+git submodule add https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+
+vim +PluginInstall +qall
