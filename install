@@ -8,7 +8,9 @@ ln -s $PWD/.vimrc $INSTALLDIR/.vimrc 2> /dev/null
 ln -s $PWD/.vim $INSTALLDIR/.vim 2> /dev/null
 ln -s $PWD/.tmux.conf $INSTALLDIR/.tmux.conf 2> /dev/null
 
-git submodule add -f https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+if [ ! -d "~/.vim/bundle/Vundle.vim" ]; then
+	git submodule add -f https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+fi
 
 vim +PluginInstall +qall
 
