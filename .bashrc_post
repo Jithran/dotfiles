@@ -1,0 +1,7 @@
+
+
+export TERM=screen-256color
+
+function cd {
+	buildin cd "$@" && ls -hal -F
+}

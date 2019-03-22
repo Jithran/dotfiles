@@ -12,4 +12,4 @@ git submodule add -f https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/V
 
 vim +PluginInstall +qall
 
-echo "export TERM=screen-256color" >> $INSTALLDIR/.bashrc
+cat $PWD/.bashrc_post >> $INSTALLDIR/.bashrc

@@ -80,3 +80,11 @@ nmap { {zz
 nmap } }zz
 
 map <C-n> :NERDTree<CR>
+
+inoremap <expr> <C-K> ShowDiagraphs()
+
+function! ShowDiagraphs()
+	digraphs
+	call getchar()
+	return "\<C-K>"
+endfunction
