@@ -63,8 +63,8 @@ no <up> ddkP
 no <down> ddp
 no <left> <Nop>
 no <right> <Nop>
-ino <up> ddkP
-ino <down> ddp
+ino <up> <Esc>ddkPi
+ino <down> <Esc>ddpi
 ino <left> <Nop>
 ino <right> <Nop>
 vno <up> <Nop>

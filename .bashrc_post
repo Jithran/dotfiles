@@ -3,5 +3,5 @@
 export TERM=screen-256color
 
 function cd {
-	buildin cd "$@" && ls -hal -F
+	builtin cd "$@" && ls -hal -F
 }
