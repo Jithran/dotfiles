@@ -19,6 +19,9 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'ctrlp.vim'
 call vundle#end()            " required
 filetype plugin indent on    " required
+set tabstop=4
+set shiftwidth=4
+set expandtab
 
 colo molokai
 "let g:airline_pwerline_fonts = 1
@@ -57,6 +60,8 @@ nmap n nzz
 nmap N Nzz
 nmap { {zz
 nmap } }zz
+
+map <F7> gg=G<C-o><C-o>
 
 map <C-n> :NERDTree<CR>
 
