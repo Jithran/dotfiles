@@ -5,3 +5,7 @@ export TERM=screen-256color
 function cd {
 	builtin cd "$@" && ls -hal -F
 }
+
+# unbind ctrl+C so we can use it for other keybindings
+bind -r '\C-s'
+stty -ixon
