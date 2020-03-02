@@ -34,6 +34,7 @@ let g:netrw_list_hide=netrw_gitignore#Hide()
 let g:netrw_list_hide.=',\(^|\s\s\)\zs\.\S\+'
 
 colo molokai
+hi Normal guibg=NONE ctermbg=NONE
 "let g:airline_pwerline_fonts = 1
 let g:airline_powerline_fonts = 1
 if !exists('g:airline_symbols')

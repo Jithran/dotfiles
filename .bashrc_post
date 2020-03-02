@@ -1,5 +1,5 @@
 
-
+hi Normal guibg=NONE ctermbg=NONE
 export TERM=screen-256color
 
 function cd {
@@ -9,3 +9,5 @@ function cd {
 # unbind ctrl+C so we can use it for other keybindings
 bind -r '\C-s'
 stty -ixon
+
+alias ping='ping -O' # Show lost or late packages
