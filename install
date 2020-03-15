@@ -1,9 +1,11 @@
 #!/bin/bash
 INSTALLDIR=${1:-$HOME}
 
+sudo apt update && sudo apt -y upgrade
 # install dependencies
 sudo apt-get -y install vim git curl fonts-powerline tmux
 
+ln -s $PWD/.bash_aliases $INSTALLDIR/.bash_aliases 2> /dev/null
 ln -s $PWD/.vimrc $INSTALLDIR/.vimrc 2> /dev/null
 ln -s $PWD/.vim $INSTALLDIR/.vim 2> /dev/null
 ln -s $PWD/.tmux.conf $INSTALLDIR/.tmux.conf 2> /dev/null
