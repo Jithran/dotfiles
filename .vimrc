@@ -19,11 +19,17 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'shawncplus/phpcomplete.vim'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'ctrlp.vim'
+Plugin 'valloric/YouCompleteMe'
+Plugin 'mbbill/undotree'
 call vundle#end()            " required
 filetype plugin indent on    " required
-set tabstop=4
+set tabstop=4 softtabstop=4
 set shiftwidth=4
 set expandtab
+set noswapfile
+set autoindent
+set smartindent
+set incsearch
 
 " File Browsing, Tweaks for browsing
 let g:netrw_banner=0        " Disable banner
@@ -33,8 +39,11 @@ let g:netrw_liststyle=3     " tree view
 let g:netrw_list_hide=netrw_gitignore#Hide()
 let g:netrw_list_hide.=',\(^|\s\s\)\zs\.\S\+'
 
-colo molokai
 hi Normal guibg=NONE ctermbg=NONE
+
+color iceberg
+set background=dark
+
 "let g:airline_pwerline_fonts = 1
 let g:airline_powerline_fonts = 1
 if !exists('g:airline_symbols')
@@ -50,6 +59,7 @@ let g:ctrlp_show_hidden = 1
 let NERDTreeMinimalUI = 1
 
 imap jk <Esc>
+imap kj <Esc>
 
 "remap arrow keys
 no <up> ddkP
@@ -77,8 +87,11 @@ nmap { {zz
 nmap } }zz
 
 map <F7> gg=G<C-o><C-o>
+map <F4> :set wrap!<CR>
 
 map <C-n> :NERDTree<CR>
+"map <C-w> :set wrap!<CR>
+nnoremap <F5> :UndotreeToggle<CR>
 
 inoremap <expr> <C-K> ShowDiagraphs()
 
