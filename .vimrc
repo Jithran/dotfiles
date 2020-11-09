@@ -52,7 +52,7 @@ endif
 let g:airline_symbols.space = "\ua0"
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#show_buffers = 0
-let g:airline_theme = 'dark'
+let g:airline_theme = 'deus'
 
 let g:ctrlp_show_hidden = 1
 
@@ -90,6 +90,8 @@ map <F7> gg=G<C-o><C-o>
 map <F4> :set wrap!<CR>
 
 map <C-n> :NERDTree<CR>
+nmap <C-j> :NERDTreeFind<CR>
+nmap <C-b> :buffers<CR>:buffer<Space>
 "map <C-w> :set wrap!<CR>
 nnoremap <F5> :UndotreeToggle<CR>
 

@@ -20,8 +20,9 @@ set-option -g status-fg "#f8f8f2"  # Foreground
 set-option -g status-attr default
 
 # pane border
-set-option -g pane-border-fg colour228
-set-option -g pane-active-border-fg colour203
+set-option -g pane-border-fg colour231
+set-option -g pane-active-border-bg colour60
+set-option -g pane-active-border-fg colour60
 
 # message text
 set-option -g message-bg "#ff5555"  # Red

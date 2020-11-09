@@ -19,5 +19,7 @@ vim +PluginInstall +qall
 
 cat $PWD/.bashrc_post >> $INSTALLDIR/.bashrc
 
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
 # git settings
 git config --global core.editor "vim"
