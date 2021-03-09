@@ -21,6 +21,7 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'ctrlp.vim'
 Plugin 'valloric/YouCompleteMe'
 Plugin 'mbbill/undotree'
+Plugin 'prettier/vim-prettier'
 call vundle#end()            " required
 filetype plugin indent on    " required
 set tabstop=4 softtabstop=4
@@ -39,10 +40,10 @@ let g:netrw_liststyle=3     " tree view
 let g:netrw_list_hide=netrw_gitignore#Hide()
 let g:netrw_list_hide.=',\(^|\s\s\)\zs\.\S\+'
 
-hi Normal guibg=NONE ctermbg=NONE
+" hi Normal guibg=NONE ctermbg=NONE
 
 color iceberg
-set background=dark
+" set background=dark
 
 "let g:airline_pwerline_fonts = 1
 let g:airline_powerline_fonts = 1
