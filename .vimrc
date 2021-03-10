@@ -14,7 +14,7 @@ Plugin 'tpope/vim-fugitive'
 " sudo apt-get install fonts-powerline
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-Plugin 'edkolev/tmuxline.vim'
+" Plugin 'edkolev/tmuxline.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'shawncplus/phpcomplete.vim'
 Plugin 'airblade/vim-gitgutter'
@@ -31,6 +31,7 @@ set noswapfile
 set autoindent
 set smartindent
 set incsearch
+set term=screen-256color
 
 " File Browsing, Tweaks for browsing
 let g:netrw_banner=0        " Disable banner
@@ -42,13 +43,12 @@ let g:netrw_list_hide.=',\(^|\s\s\)\zs\.\S\+'
 
 " hi Normal guibg=NONE ctermbg=NONE
 
-color iceberg
+color molokai
 " set background=dark
 
-"let g:airline_pwerline_fonts = 1
 let g:airline_powerline_fonts = 1
 if !exists('g:airline_symbols')
-	let g:airline_symbols = {}
+ let g:airline_symbols = {}
 endif
 let g:airline_symbols.space = "\ua0"
 let g:airline#extensions#tabline#enabled = 1
