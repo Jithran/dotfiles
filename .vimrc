@@ -41,10 +41,10 @@ let g:netrw_liststyle=3     " tree view
 let g:netrw_list_hide=netrw_gitignore#Hide()
 let g:netrw_list_hide.=',\(^|\s\s\)\zs\.\S\+'
 
-" hi Normal guibg=NONE ctermbg=NONE
+hi Normal guibg=NONE ctermbg=NONE
 
 color molokai
-" set background=dark
+set background=dark
 
 let g:airline_powerline_fonts = 1
 if !exists('g:airline_symbols')

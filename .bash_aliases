@@ -35,10 +35,11 @@ alias dashboard=" \
     tmux rename-window Dashboard; \
     tmux send-keys 'vim .' C-m; \
     "
-alias masta=" \                                                                                                                                                                                                                                                                                                        
-    tmux split-pane -h -p 35; \                                                                                                                                                                                                                                                                                        
-    tmux split-pane -v -p 75; \                                                                                                                                                                                                                                                                                        
-    tmux split-pane -v -p 66; \                                                                                                                                                                                                                                                                                        
-    tmux split-pane -v -p 50; \                                                                                                                                                                                                                                                                                        
-    tmux select-pane -t 0; \                                                                                                                                                                                                                                                                                           
+alias masta=" \
+    tmux split-pane -h -p 35; \
+    tmux split-pane -v -p 75; \
+    tmux split-pane -v -p 66; \
+    tmux split-pane -v -p 50; \
+    tmux select-pane -t 0; \
+    tmux rename-window MaSta; \
     " 
