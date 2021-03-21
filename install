@@ -4,7 +4,7 @@ INSTALLDIR=${1:-$HOME}
 sudo add-apt-repository ppa:jonathonf/vim
 sudo apt update && sudo apt -y upgrade
 # install dependencies
-sudo apt-get -y install vim git curl fonts-powerline tmux
+sudo apt-get -y install vim git curl fonts-powerline tmux ncdu
 
 ln -s $PWD/.bash_aliases $INSTALLDIR/.bash_aliases 2> /dev/null
 ln -s $PWD/.vimrc $INSTALLDIR/.vimrc 2> /dev/null
@@ -23,3 +23,28 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 # git settings
 git config --global core.editor "vim"
+
+#installing ZSH
+sudo apt -y install zsh
+sudo apt-get -y install powerline fonts-powerline
+
+git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+
+cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
+sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="agnoster"/g' ~/.zshrc
+
+chsh -s /bin/zsh
+
+#zsh higlighter 
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$HOME/.zsh-syntax-highlighting" --depth 1
+cat $PWD/.zshrc_post >> $INSTALLDIR/.zshrc
+
+#install Snap packages
+sudo snap install hi
+sudo snap install bpytop
+sudo snap connect bpytop:mount-observe
+sudo snap connect bpytop:network-control
+sudo snap connect bpytop:hardware-observe
+sudo snap connect bpytop:system-observe
+sudo snap connect bpytop:process-control
+sudo snap connect bpytop:physical-memory-observe
