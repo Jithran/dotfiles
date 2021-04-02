@@ -15,13 +15,10 @@ function cd {
 
 stty -ixon
 
-tmux new
-rm -rf ~/.tmux/resurrect/tm*
-rm -rf ~/.tmux/resurrect/last
-ln -s ~/.tmux/resurrect/source.txt ~/.tmux/resurrect/last
+tmux attach
 
 source $HOME/.bash_aliases
-source $HOME/.bash_aliases_private
+source $HOME/dotfiles/.bash_aliases_private
 autoload -U compinit && compinit
 source $HOME/dotfiles/zsh.plugin/z.plugin.zsh
 

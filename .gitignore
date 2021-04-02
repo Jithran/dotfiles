@@ -1,3 +1,4 @@
 .vim/bundle
 *.swp
 .netrwhist
+.bash_aliases_private
