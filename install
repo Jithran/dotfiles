@@ -40,6 +40,8 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$HOME/.zsh-s
 cat $PWD/.zshrc_post >> $INSTALLDIR/.zshrc
 
 #install Snap packages
+sudo apt install snapd
+sudo snap install snap-store
 sudo snap install hi
 sudo snap install bpytop
 sudo snap connect bpytop:mount-observe
