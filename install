@@ -1,28 +1,25 @@
 #!/bin/bash
 INSTALLDIR=${1:-$HOME}
+FULLPATH=$(readlink -f $0)
+INCPATH=${FULLPATH%/*}
 
-sudo add-apt-repository ppa:jonathonf/vim
-sudo apt update && sudo apt -y upgrade
-# install dependencies
-sudo apt-get -y install vim git curl fonts-powerline tmux ncdu nodejs npm
+. $INCPATH/install_func.sh
+
+menu
+
+case $editor in
+    1) install_vim ;;
+    2) install_neovim ;;
+    0) exit 0 ;;
+    *) echo -e $red"Not a valid option"$clear; menu ;;
+esac
 
 ln -s $PWD/.bash_aliases $INSTALLDIR/.bash_aliases 2> /dev/null
-ln -s $PWD/.vimrc $INSTALLDIR/.vimrc 2> /dev/null
-ln -s $PWD/.vim $INSTALLDIR/.vim 2> /dev/null
 ln -s $PWD/.tmux.conf $INSTALLDIR/.tmux.conf 2> /dev/null
-
-if [ ! -d "~/.vim/bundle/Vundle.vim" ]; then
-	git submodule add -f https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-fi
-
-vim +PluginInstall +qall
 
 cat $PWD/.bashrc_post >> $INSTALLDIR/.bashrc
 
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-
-# git settings
-git config --global core.editor "vim"
 
 #installing ZSH
 sudo apt -y install zsh
@@ -40,7 +37,7 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$HOME/.zsh-s
 cat $PWD/.zshrc_post >> $INSTALLDIR/.zshrc
 
 #install Snap packages
-sudo apt install snapd
+sudo apt -y install snapd
 sudo snap install snap-store
 sudo snap install hi
 sudo snap install bpytop
@@ -52,11 +49,11 @@ sudo snap connect bpytop:process-control
 sudo snap connect bpytop:physical-memory-observe
 
 #install docker support
-sudo apt install apt-transport-https ca-certificates curl software-properties-common
+sudo apt -y install apt-transport-https ca-certificates curl software-properties-common
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
 sudo apt update
-sudo apt install docker-ce
+sudo apt -y install docker-ce
 
 #install Emote snap package 🤞
 sudo snap install emote
