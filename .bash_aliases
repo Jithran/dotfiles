@@ -11,6 +11,7 @@ alias cm="cmatrix -C blue -b -u 3 -s"
 alias sail='bash vendor/bin/sail'
 alias pa="php artisan "
 alias sa="vendor/bin/sail artisan "
+alias ca="git pull; git commit -a -m "
 if command -v nvim &> /dev/null
 then
     alias vim="nvim"

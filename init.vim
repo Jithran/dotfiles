@@ -54,6 +54,7 @@ nmap <C-s> :w<CR>
 imap jk <Esc>
 imap kj <Esc>
 nmap <F6> :exec '!'.getline('.') <CR>
+nmap <C-b> :buffers<CR>:buffer<Space>
 
 let g:airline_powerline_fonts = 1
 if !exists('g:airline_symbols')
