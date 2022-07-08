@@ -10,6 +10,8 @@ menu
 case $editor in
     1) install_vim ;;
     2) install_neovim ;;
+    3) install_php; menu;;
+    4) install_gd; menu;;
     0) exit 0 ;;
     *) echo -e $red"Not a valid option"$clear; menu ;;
 esac
@@ -58,4 +60,4 @@ sudo apt -y install docker-ce
 #install Emote snap package 🤞
 sudo snap install emote
 
-install_gh	# github gh package
+
