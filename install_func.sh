@@ -126,6 +126,8 @@ install_docker() {
 	sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
 	sudo apt update
 	sudo apt -y install docker-ce docker-composer
+	sudo groupadd docker
+	sudo usermod -aG docker $USER
 }
 
 install_snap() {
