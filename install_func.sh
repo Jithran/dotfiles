@@ -158,5 +158,6 @@ install_generic() {
 
 	ln -s $PWD/.tmux.conf $INSTALLDIR/.tmux.conf 2> /dev/null
 	git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+	$HOME/.tmux/plugins/tpm/bin/install_plugins
 }
 
