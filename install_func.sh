@@ -19,10 +19,24 @@ menu() {
 	$(ColorGreen '2)') NeoVim
 	$(ColorGreen '3)') PHP 8.1 & Composer
 	$(ColorGreen '4)') Github CLI (gh)
+	$(ColorGreen '5)') ZSH shell
+	$(ColorGreen '6)') Docker installation
+	$(ColorGreen '7)') Install Snap & packages
+	$(ColorGreen '9)') Install all (with NeoVim)
 	$(ColorGreen '0)') Cancel and Exit
 	$(ColorBlue 'Choose your editor: ')"
 
 	read editor
+}
+
+
+install_complete() {
+	install_neovim
+	install_php
+	install_zsh
+	install_gh
+	install_docker
+	install_snap
 }
 
 install_vim() {
@@ -54,8 +68,15 @@ install_neovim() {
 	sudo apt -y install neovim exuberant-ctags
 	sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
 		https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-	mkdir ~/.config
-	mkdir ~/.config/nvim
+
+	if [[ ! -d "$HOME/.config/" ]]; then
+		mkdir -p "$HOME/.config/"
+	fi
+
+	if [[ ! -d "$HOME/.config/nvim/" ]]; then
+		mkdir -p "$HOME/.config/nvim/"
+	fi
+
 	ln -s $PWD/init.vim $INSTALLDIR/.config/nvim/init.vim 2> /dev/null
 
 	nvim +PlugInstall +qall
@@ -81,6 +102,47 @@ install_php() {
 	sudo mv composer.phar /usr/local/bin/composer
 }
 
+install_zsh() {
+	#installing ZSH
+	sudo apt -y install zsh
+	sudo apt-get -y install powerline fonts-powerline
+
+	git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+
+	cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
+	sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="agnoster"/g' ~/.zshrc
+
+	chsh -s /bin/zsh
+
+	#zsh higlighter 
+	git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$HOME/.zsh-syntax-highlighting" --depth 1
+	cat $PWD/.zshrc_post >> $INSTALLDIR/.zshrc
+}
+
+install_docker() {
+	#install docker support
+	sudo apt -y install apt-transport-https ca-certificates curl software-properties-common
+	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+	sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+	sudo apt update
+	sudo apt -y install docker-ce docker-composer
+}
+
+install_snap() {
+	#install Snap packages
+	sudo apt -y install snapd
+	sudo snap install snap-store
+	sudo snap install hi
+	sudo snap install bpytop
+	sudo snap connect bpytop:mount-observe
+	sudo snap connect bpytop:network-control
+	sudo snap connect bpytop:hardware-observe
+	sudo snap connect bpytop:system-observe
+	sudo snap connect bpytop:process-control
+	sudo snap connect bpytop:physical-memory-observe
+	sudo snap install emote #install Emote snap package 🤞
+}
+
 install_generic() {
 	sudo apt update && sudo apt -y upgrade
 	# install dependencies
@@ -88,4 +150,11 @@ install_generic() {
 
 	curl -sL https://deb.nodesource.com/setup_18.x | sudo bash -
 	sudo apt install nodejs npm
+
+	ln -s $PWD/.bash_aliases $INSTALLDIR/.bash_aliases 2> /dev/null
+	cat $PWD/.bashrc_post >> $INSTALLDIR/.bashrc
+
+	ln -s $PWD/.tmux.conf $INSTALLDIR/.tmux.conf 2> /dev/null
+	git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 }
+
