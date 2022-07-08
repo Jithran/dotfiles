@@ -1,4 +1,5 @@
 # Colors
+red='\e[31m'
 green='\e[32m'
 blue='\e[34m'
 clear='\e[0m'
@@ -147,11 +148,10 @@ install_snap() {
 
 install_generic() {
 	sudo apt update && sudo apt -y upgrade
-	# install dependencies
-	sudo apt-get -y install git curl tmux ncdu
-
 	curl -sL https://deb.nodesource.com/setup_18.x | sudo bash -
-	sudo apt install nodejs npm
+
+	# install dependencies
+	sudo apt-get -y install git curl tmux ncdu nodejs npm
 
 	ln -s $PWD/.bash_aliases $INSTALLDIR/.bash_aliases 2> /dev/null
 	cat $PWD/.bashrc_post >> $INSTALLDIR/.bashrc

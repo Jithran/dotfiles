@@ -17,7 +17,7 @@ case $editor in
     7) install_snap; menu;;
     9) install_complete; menu;;
     0) exit 0 ;;
-    *) echo -e $red"Not a valid option"$clear; menu ;;
+    *) echo -e $red"Not a valid option..."$clear; menu ;;
 esac
 
 
