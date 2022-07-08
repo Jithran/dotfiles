@@ -11,7 +11,7 @@ case $editor in
     1) install_vim ;;
     2) install_neovim ;;
     3) install_php; menu;;
-    4) install_gd; menu;;
+    4) install_gh; menu;;
     0) exit 0 ;;
     *) echo -e $red"Not a valid option"$clear; menu ;;
 esac
