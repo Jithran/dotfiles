@@ -53,6 +53,7 @@ nmap } }zz
 nmap <C-s> :w<CR>
 imap jk <Esc>
 imap kj <Esc>
+nmap <F6> :exec '!'.getline('.')
 
 let g:airline_powerline_fonts = 1
 if !exists('g:airline_symbols')
