@@ -102,9 +102,12 @@ install_neovim() {
 			mkdir -p "$HOME/.config/nvim/"
 		fi
 
-		ln -s $PWD/init.vim $INSTALLDIR/.config/nvim/init.vim 2> /dev/null
+		#ln -s $PWD/init.vim $INSTALLDIR/.config/nvim/init.vim 2> /dev/null
+		#nvim +PlugInstall +qall
 
-		nvim +PlugInstall +qall
+		git clone https://github.com/AstroNvim/AstroNvim ~/.config/nvim
+		nvim +PackerSync +qall
+
 	else
 		clear
 		Alert 'Command nvim already installed'
@@ -206,7 +209,7 @@ install_generic() {
 	curl -sL https://deb.nodesource.com/setup_18.x | sudo bash -
 
 	# install dependencies
-	sudo apt-get -y install git curl tmux ncdu nodejs npm
+	sudo apt-get -y install git curl tmux ncdu nodejs
 
 	ln -s $PWD/.bash_aliases $INSTALLDIR/.bash_aliases 2> /dev/null
 	cat $PWD/.bashrc_post >> $INSTALLDIR/.bashrc
