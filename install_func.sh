@@ -87,7 +87,8 @@ install_neovim() {
 		git clone https://github.com/neovim/neovim
 		cd neovim && make CMAKE_BUILD_TYPE=RelWithDebInfo
 		sudo make install
-		cd $HOME
+		cd ..
+		rm -rf neovim
 		
 		sudo apt -y install exuberant-ctags
 		sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
