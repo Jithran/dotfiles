@@ -15,7 +15,8 @@ case $editor in
     5) install_zsh; menu ;;
     6) install_docker; menu ;;
     7) install_snap; menu ;;
-    9) install_complete; menu ;;
+    9) install_complete; install_neovim; menu ;;
+    10) install_complete; install_vim; menu ;;
     0) exit 0 ;;
     *) clear; echo -e "${red}Not a valid option...${clear}"; menu ;;
 esac

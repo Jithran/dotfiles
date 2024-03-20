@@ -40,6 +40,7 @@ menu() {
     $(echo_green '6)') Docker installation
     $(echo_green '7)') Install Snap & packages
     $(echo_green '9)') Install all (with NeoVim)
+    $(echo_green '10)') Install all (with Vim)
     $(echo_green '0)') Cancel and Exit
     Choose your option: "
     read -r editor
@@ -55,7 +56,6 @@ check_error() {
 
 install_complete() {
     install_generic
-    install_neovim
     install_php
     install_gh
     install_zsh
@@ -144,6 +144,8 @@ install_neovim() {
     else
         alert "AstroNvim configuration already exists. Skipping..."
     fi
+
+    echo_green "Neovim successfully installed"
 }
 
 
@@ -171,7 +173,7 @@ install_gh() {
     sudo apt -y install gh
     check_error "GitHub CLI (gh) installation failed."
 
-    echo 'GitHub CLI (gh) installed successfully.'
+    echo_green 'GitHub CLI (gh) installed successfully.'
 }
 
 
@@ -205,7 +207,7 @@ install_php() {
     sudo mv composer.phar /usr/local/bin/composer
     check_error "Composer installation failed."
 
-    echo 'PHP and Composer installed successfully.'
+    echo_green 'PHP and Composer installed successfully.'
 }
 
 
@@ -249,7 +251,10 @@ install_zsh() {
     echo "source ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> "$HOME/.zshrc"
     check_error "Appending zsh-syntax-highlighting to .zshrc failed."
 
-    echo 'ZSH installed and configured successfully.'
+    echo_blue "Appending config to .zshrc file"
+    cat "$PWD/.zshrc_post" >> "$INSTALLDIR/.zshrc"
+
+    echo_green 'ZSH installed and configured successfully.'
 }
 
 
@@ -284,15 +289,12 @@ install_docker() {
 
 
 install_snap() {
-    if command_exists snap; then
-        echo 'Snap is already installed.'
-        return
-    fi
-
     echo 'Installing Snap and some snap packages...'
 
-    sudo apt -y install snapd
-    check_error "Snapd installation failed."
+    if ! command_exists snap; then
+        sudo apt -y install snapd
+        check_error "Snapd installation failed."
+    fi
 
     sudo snap install snap-store
     check_error "Snap Store installation failed."
