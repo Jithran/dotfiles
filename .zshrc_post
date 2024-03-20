@@ -1,9 +1,8 @@
-
 #########################################################################
 # Custom block added in post
 #########################################################################
 
-source /home/jithran/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+plugins=(git zsh-syntax-highlighting)
 
 export TERM=screen-256color
 
@@ -15,11 +14,21 @@ function cd {
 
 stty -ixon
 
-tmux attach
+# Check if TMUX is not running before attaching or creating a new session
+if [ -z "$TMUX" ]; then
+    tmux attach || tmux new-session
+fi
 
-source $HOME/.bash_aliases
-source $HOME/dotfiles/.bash_aliases_private
+# Source .bash_aliases if it exists
+[ -f "$HOME/.bash_aliases" ] && source "$HOME/.bash_aliases"
+
+# Source .bash_aliases_private if it exists
+[ -f "$HOME/dotfiles/.bash_aliases_private" ] && source "$HOME/dotfiles/.bash_aliases_private"
+
+# Initialize completion system
 autoload -U compinit && compinit
-source $HOME/dotfiles/zsh.plugin/z.plugin.zsh
+
+# Source z.plugin.zsh if it exists
+[ -f "$HOME/dotfiles/zsh.plugin/z.plugin.zsh" ] && source "$HOME/dotfiles/zsh.plugin/z.plugin.zsh"
 
 clear
