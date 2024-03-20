@@ -300,19 +300,12 @@ install_snap() {
     check_error "Snap Store installation failed."
 
 	sudo snap install bpytop
-	check_error "Snap bpytop installation failed."
 	sudo snap connect bpytop:mount-14observe
-	check_error "Snap bpytop installation failed."
 	sudo snap connect bpytop:network-control
-	check_error "Snap bpytop installation failed."
 	sudo snap connect bpytop:hardware-observe
-	check_error "Snap bpytop installation failed."
 	sudo snap connect bpytop:system-observe
-	check_error "Snap bpytop installation failed."
 	sudo snap connect bpytop:process-control
-	check_error "Snap bpytop installation failed."
 	sudo snap connect bpytop:physical-memory-observe
-	check_error "Snap bpytop installation failed."
 
     sudo snap install emote #install Emote snap package 🤞
     check_error "emote snap installation failed."
