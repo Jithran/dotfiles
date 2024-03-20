@@ -1,32 +1,21 @@
 #!/bin/bash
-INSTALLDIR=${1:-$HOME}
-FULLPATH=$(readlink -f $0)
-INCPATH=${FULLPATH%/*}
+INSTALLDIR="${1:-$HOME}"
+FULLPATH=$(dirname "$(realpath "$0")")
+INCPATH="$FULLPATH"
 
-. $INCPATH/install_func.sh
+source "$INCPATH/install_func.sh"
 
 menu
 
 case $editor in
     1) install_vim ;;
     2) install_neovim ;;
-    3) install_php; menu;;
-    4) install_gh; menu;;
-    5) install_zsh; menu;;
-    6) install_docker; menu;;
-    7) install_snap; menu;;
-    9) install_complete; menu;;
+    3) install_php; menu ;;
+    4) install_gh; menu ;;
+    5) install_zsh; menu ;;
+    6) install_docker; menu ;;
+    7) install_snap; menu ;;
+    9) install_complete; menu ;;
     0) exit 0 ;;
-    *) clear; echo -e $red"Not a valid option..."$clear; menu ;;
+    *) clear; echo -e "${red}Not a valid option...${clear}"; menu ;;
 esac
-
-
-
-
-
-
-
-
-
-
-
