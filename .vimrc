@@ -22,6 +22,8 @@ Plugin 'ctrlp.vim'
 Plugin 'valloric/YouCompleteMe'
 Plugin 'mbbill/undotree'
 Plugin 'prettier/vim-prettier'
+Plugin 'zefei/vim-wintabs'
+Plugin 'zefei/vim-wintabs-powerline'
 call vundle#end()            " required
 filetype plugin indent on    " required
 set tabstop=4 softtabstop=4
@@ -87,12 +89,16 @@ nmap N Nzz
 nmap { {zz
 nmap } }zz
 
+"wintabs plugin mapping
+map <C-H> <Plug>(wintabs_previous)
+map <C-L> <Plug>(wintabs_next)
+
 map <F7> gg=G<C-o><C-o>
 map <F4> :set wrap!<CR>
 
 map <C-n> :NERDTree<CR>
 nmap <C-j> :NERDTreeFind<CR>
-nmap <C-b> :buffers<CR>:buffer<Space>
+nmap <C-k> :buffers<CR>:buffer<Space>
 "map <C-w> :set wrap!<CR>
 nnoremap <F5> :UndotreeToggle<CR>
 
