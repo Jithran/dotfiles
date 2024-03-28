@@ -1,6 +1,7 @@
 alias myip="curl http://ipecho.net/plain; echo"
 alias ping="ping -O"        # show lost or late packages
 alias psg="ps auwx | grep "
+alias release="lsb_release -a "
 
 # List paths
 alias path="echo -e ${PATH//:/\\n}"
