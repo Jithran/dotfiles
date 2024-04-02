@@ -7,12 +7,15 @@ alias release="lsb_release -a "
 alias path="echo -e ${PATH//:/\\n}"
 alias fhere="find . -name "
 
-alias ngrok="~/Apps/ngrok http -region eu "
+alias ngrok="~/Apps/ngrok http --region eu "
 alias cm="cmatrix -C blue -b -u 3 -s"
 alias sail='bash vendor/bin/sail'
 alias pa="php artisan "
 alias sa="vendor/bin/sail artisan "
 alias ca="git pull; git commit -a -m "
+alias phpunitt="./vendor/phpunit/phpunit/phpunit "
+alias hack="docker run --rm -it bcbcarl/hollywood"
+
 if command -v nvim &> /dev/null
 then
     alias vim="nvim"
