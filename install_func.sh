@@ -324,7 +324,7 @@ install_generic() {
     apt_update_upgrade
 
     # Install basic dependencies
-    sudo apt-get -y install git curl tmux ncdu nodejs
+    sudo apt-get -y install git curl tmux ncdu nodejs xsel
     check_error "Failed to install basic dependencies."
 
     # Install Node.js (Example: Using NodeSource for the latest versions)
