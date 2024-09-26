@@ -328,7 +328,7 @@ install_generic() {
     check_error "Failed to install basic dependencies."
 
     # Install Node.js (Example: Using NodeSource for the latest versions)
-    curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+    curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
     check_error "Setting up NodeSource repository failed."
     sudo apt-get install -y nodejs
     check_error "Node.js installation failed."
