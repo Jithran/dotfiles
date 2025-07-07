@@ -15,9 +15,9 @@ function cd {
 stty -ixon
 
 # Check if TMUX is not running before attaching or creating a new session
-if [ -z "$TMUX" ]; then
-    tmux attach || tmux new-session
-fi
+#if [ -z "$TMUX" ]; then
+    #tmux attach || tmux new-session
+#fi
 
 # Source .bash_aliases if it exists
 [ -f "$HOME/.bash_aliases" ] && source "$HOME/.bash_aliases"

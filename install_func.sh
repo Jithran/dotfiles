@@ -34,7 +34,7 @@ menu() {
     Do you want to install vim or NeoVim?
     $(echo_green '1)') Vim
     $(echo_green '2)') NeoVim
-    $(echo_green '3)') PHP 8.1 & Composer
+    $(echo_green '3)') PHP 8.3 & Composer
     $(echo_green '4)') GitHub CLI (gh)
     $(echo_green '5)') ZSH shell
     $(echo_green '6)') Docker installation
@@ -186,10 +186,11 @@ install_php() {
     echo 'Installing the latest version of PHP...'
 
     # PHP version to install
-    php_version="8.2"
+    php_version="8.3"
 
     # Update and install PHP
     apt_update_upgrade
+    sudo add-apt-repository -y ppa:ondrej/php
     sudo apt -y install --no-install-recommends "php$php_version"
     check_error "Failed to install PHP $php_version."
 
@@ -324,11 +325,11 @@ install_generic() {
     apt_update_upgrade
 
     # Install basic dependencies
-    sudo apt-get -y install git curl tmux ncdu nodejs
+    sudo apt-get -y install git curl tmux ncdu nodejs xsel
     check_error "Failed to install basic dependencies."
 
     # Install Node.js (Example: Using NodeSource for the latest versions)
-    curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+    curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
     check_error "Setting up NodeSource repository failed."
     sudo apt-get install -y nodejs
     check_error "Node.js installation failed."
