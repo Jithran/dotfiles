@@ -16,6 +16,9 @@ alias ca="git pull; git commit -a -m "
 alias phpunitt="./vendor/phpunit/phpunit/phpunit "
 alias hack="docker run --rm -it bcbcarl/hollywood"
 
+# git shortcuts
+alias gitclean="git reset --hard && git clean -fd"
+
 if command -v nvim &> /dev/null
 then
     alias vim="nvim"
@@ -47,9 +50,7 @@ alias dashboard=" \
     "
 alias masta=" \
     tmux split-pane -h -p 35; \
-    tmux split-pane -v -p 75; \
-    tmux split-pane -v -p 66; \
     tmux split-pane -v -p 50; \
     tmux select-pane -t 0; \
-    tmux rename-window MaSta; \
+    tmux rename-window \$(basename \$(pwd)); \
     " 
