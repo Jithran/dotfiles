@@ -66,7 +66,7 @@ log_info "neovim installed successfully: $(nvim --version | head -n1)"
 # Setup config files with stow
 cd "$HOME/dotfiles" || { log_error "~/dotfiles not found"; exit 1; }
 log_info "Stowing configs from ~/dotfiles..."
-stow bash nvim tmux 2>&1 || log_warn "Stow had conflicts - backup existing configs if needed"
+stow bash nvim tmux bpytop 2>&1 || log_warn "Stow had conflicts - backup existing configs if needed"
 
 # tmux post stow installation
 git clone https://github.com/tmux-plugins/tpm ~/dotfiles/.tmux/plugins/tpm
