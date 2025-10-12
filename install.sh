@@ -68,6 +68,11 @@ cd "$HOME/dotfiles" || { log_error "~/dotfiles not found"; exit 1; }
 log_info "Stowing configs from ~/dotfiles..."
 stow bash nvim tmux 2>&1 || log_warn "Stow had conflicts - backup existing configs if needed"
 
+# tmux post stow installation
+git clone https://github.com/tmux-plugins/tpm ~/dotfiles/.tmux/plugins/tpm
+~/.tmux/plugins/tpm/bin/install_plugins
+tmux source-file ~/.tmux.conf
+
 # Update mlocate database
 log_info "Updating mlocate database..."
 sudo updatedb || log_warn "Failed to update mlocate database"
