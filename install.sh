@@ -63,10 +63,13 @@ sudo tar -xzf nvim-linux-x86_64.tar.gz -C /opt
 sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim
 log_info "neovim installed successfully: $(nvim --version | head -n1)"
 
+# Install starship
+curl -sS https://starship.rs/install.sh | sh
+
 # Setup config files with stow
 cd "$HOME/dotfiles" || { log_error "~/dotfiles not found"; exit 1; }
 log_info "Stowing configs from ~/dotfiles..."
-stow bash nvim tmux bpytop 2>&1 || log_warn "Stow had conflicts - backup existing configs if needed"
+stow bash nvim tmux bpytop starship 2>&1 || log_warn "Stow had conflicts - backup existing configs if needed"
 
 # tmux post stow installation
 git clone https://github.com/tmux-plugins/tpm ~/dotfiles/tmux/.tmux/plugins/tpm
