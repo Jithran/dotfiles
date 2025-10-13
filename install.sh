@@ -40,7 +40,7 @@ sudo apt update && sudo apt upgrade -y
 log_info "Installing dependencies..."
 sudo apt install -y \
     gh curl ncdu make automake autoconf libtool pkg-config \
-    libevent-dev libncurses-dev bison mlocate tree neofetch \
+    libevent-dev libncurses-dev bison plocate tree neofetch \
     ripgrep tar bpytop stow git build-essential \
     wget software-properties-common bat
 
@@ -69,9 +69,8 @@ log_info "Stowing configs from ~/dotfiles..."
 stow bash nvim tmux bpytop 2>&1 || log_warn "Stow had conflicts - backup existing configs if needed"
 
 # tmux post stow installation
-git clone https://github.com/tmux-plugins/tpm ~/dotfiles/.tmux/plugins/tpm
+git clone https://github.com/tmux-plugins/tpm ~/dotfiles/tmux/.tmux/plugins/tpm
 ~/.tmux/plugins/tpm/bin/install_plugins
-tmux source-file ~/.tmux.conf
 
 # Update mlocate database
 log_info "Updating mlocate database..."
