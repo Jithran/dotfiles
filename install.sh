@@ -42,7 +42,8 @@ sudo apt install -y \
     gh curl ncdu make automake autoconf libtool pkg-config \
     libevent-dev libncurses-dev bison plocate tree neofetch \
     ripgrep tar bpytop stow git build-essential \
-    wget software-properties-common bat
+    wget software-properties-common bat \
+    htop fzf
 
 # Install tmux
 log_info "Installing tmux..."
