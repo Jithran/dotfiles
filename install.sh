@@ -59,7 +59,11 @@ sudo apt install -y \
     libevent-dev libncurses-dev bison plocate tree neofetch \
     ripgrep tar bpytop stow git build-essential \
     wget software-properties-common bat \
-    htop fzf nodejs npm
+    htop nodejs npm
+
+# Install fzf
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install --all
 
 # Install tmux
 if command -v tmux &> /dev/null
