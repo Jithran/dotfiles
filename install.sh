@@ -9,6 +9,12 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
+# Nerd font installation configuration
+FONT_NAME="Mononoki Nerd Font 10"
+FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Mononoki.zip"
+FONT_ZIP="Mononoki.zip"
+GNOME_TERMINAL_SCHEMA="org.gnome.Terminal.ProfilesList"
+
 log_info() {
     echo -e "${GREEN}[INFO]${NC} $1"
 }
@@ -19,6 +25,15 @@ log_warn() {
 
 log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
+}
+
+check_gnome_terminal() {
+    # check if we hava a gnome terminal for nerdfont installation
+    if gsettings list-schemas | grep -q "$GNOME_TERMINAL_SCHEMA"; then
+        return 0 # gnome found
+    else
+        return 1 # gnome 404
+    fi
 }
 
 TEMP_BUILD_DIR=$(mktemp -d)
@@ -68,7 +83,7 @@ log_info "neovim installed successfully: $(nvim --version | head -n1)"
 curl -sS https://starship.rs/install.sh | sh
 
 # Install lazygit for git management
-cd "$TMP_BUILD_DIR"
+cd "$TEMP_BUILD_DIR"
 LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
 curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
 tar xf lazygit.tar.gz lazygit
@@ -78,6 +93,25 @@ sudo install lazygit -D -t /usr/local/bin/
 cd "$HOME/dotfiles" || { log_error "~/dotfiles not found"; exit 1; }
 log_info "Stowing configs from ~/dotfiles..."
 stow bash nvim tmux bpytop starship 2>&1 || log_warn "Stow had conflicts - backup existing configs if needed"
+
+# Install the nerdfont I like to use in the gnome terminal
+cd "$TEMP_BUILD_DIR"
+mkdir -p ~/.local/share/fonts
+wget -q --show-progress -O $FONT_ZIP $FONT_URL
+unzip -q $FONT_ZIP -d ~/.local/share/fonts/
+rm /tmp/$FONT_ZIP
+fc-cache -fv
+
+if check_gnome_terminal; then
+    PROFILE_ID=$(gsettings get "$GNOME_TERMINAL_SCHEMA" default 2>/dev/null | tr -d "'")
+    if [ -z "$PROFILE_ID" ]; then
+        log_warn "Cound't find a GNOME Terminal Id, font configuration halted"
+    else
+        gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$PROFILE_ID/ use-system-font false
+        gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$PROFILE_ID/ font "'$FONT_NAAM'"
+    fi
+    log_info "Font installed into the GNOME profile"
+fi
 
 # tmux post stow installation
 git clone https://github.com/tmux-plugins/tpm ~/dotfiles/tmux/.tmux/plugins/tpm
