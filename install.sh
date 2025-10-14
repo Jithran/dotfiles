@@ -112,6 +112,32 @@ wget -q --show-progress -O $FONT_ZIP $FONT_URL
 unzip -q $FONT_ZIP -d ~/.local/share/fonts/
 fc-cache -fv
 
+# install nemo if we need to
+if ! command -v nemo &> /dev/null
+then
+    echo "Installing nemo"
+    sudo apt update
+    sudo apt install -y nemo
+    if [ $? -eq 0 ]; then
+        echo "Nemo is installed ✅"
+    else
+        echo "There was an error installing nemo ❌"
+    fi
+fi
+
+# make nemo the default file browser
+xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
+DE=$(echo $XDG_CURRENT_DESKTOP | tr '[:upper:]' '[:lower:]')
+if [[ "$DE" == *"gnome"* || "$DE" == *"budgie"* ]]; then
+    gsettings set org.gnome.desktop.background show-desktop-icons false
+    gsettings set org.nemo.desktop show-desktop-icons true
+elif [[ "$DE" == *"cinnamon"* ]]; then
+    gsettings set org.nemo.desktop show-desktop-icons true
+elif [[ "$DE" == *"mate"* ]]; then
+    gsettings set org.mate.background show-desktop-icons false 
+    gsettings set org.nemo.desktop show-desktop-icons true
+fi
+
 if check_gnome_terminal; then
     PROFILE_ID=$(gsettings get "$GNOME_TERMINAL_SCHEMA" default 2>/dev/null | tr -d "'")
     if [ -z "$PROFILE_ID" ]; then
