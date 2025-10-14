@@ -19,18 +19,77 @@ return {
         config = function()
             local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-            -- local lspconfig = require("lspconfig")
-            vim.lsp.config("html", {
-                capabilities = capabilities
+            -- HTML
+            vim.api.nvim_create_autocmd('FileType', {
+                pattern = 'html',
+                callback = function()
+                    vim.lsp.start({
+                        name = 'html',
+                        cmd = { 'vscode-html-language-server', '--stdio' },
+                        root_dir = vim.fs.root(0, {'.git'}),
+                        capabilities = capabilities,
+                    })
+                end,
             })
 
-            vim.lsp.config("lua_ls", {
-                capabilities = capabilities
+            -- Lua
+            vim.api.nvim_create_autocmd('FileType', {
+                pattern = 'lua',
+                callback = function()
+                    vim.lsp.start({
+                        name = 'lua_ls',
+                        cmd = { 'lua-language-server' },
+                        root_dir = vim.fs.root(0, {'.git'}),
+                        capabilities = capabilities,
+                    })
+                end,
             })
 
-            vim.lsp.config("phpactor", {
-                capabilities = capabilities
+            -- PHP
+            vim.api.nvim_create_autocmd('FileType', {
+                pattern = 'php',
+                callback = function()
+                    vim.lsp.start({
+                        name = 'phpactor',
+                        cmd = { 'phpactor', 'language-server' },
+                        root_dir = vim.fs.root(0, {'.git'}),
+                        capabilities = capabilities,
+                    })
+                end,
             })
+
+            -- Bash
+            vim.api.nvim_create_autocmd('FileType', {
+                pattern = {'sh', 'bash'},
+                callback = function()
+                    vim.lsp.start({
+                        name = 'bashls',
+                        cmd = { 'bash-language-server', 'start' },
+                        root_dir = vim.fs.root(0, {'.git'}),
+                        capabilities = capabilities,
+                    })
+                end,
+            })
+
+            -- local capabilities = require('cmp_nvim_lsp').default_capabilities()
+            --
+            --
+            -- -- local lspconfig = require("lspconfig")
+            -- vim.lsp.config("html", {
+            --     capabilities = capabilities
+            -- })
+            --
+            -- vim.lsp.config("lua_ls", {
+            --     capabilities = capabilities
+            -- })
+            --
+            -- vim.lsp.config("phpactor", {
+            --     capabilities = capabilities
+            -- })
+            --
+            -- vim.lsp.config("bashls", {
+            --     capabilities = capabilities
+            -- })
 
             vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
             vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, {})

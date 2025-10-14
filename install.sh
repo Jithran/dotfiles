@@ -43,7 +43,7 @@ sudo apt install -y \
     libevent-dev libncurses-dev bison plocate tree neofetch \
     ripgrep tar bpytop stow git build-essential \
     wget software-properties-common bat \
-    htop fzf
+    htop fzf nodejs npm
 
 # Install tmux
 log_info "Installing tmux..."
@@ -66,6 +66,13 @@ log_info "neovim installed successfully: $(nvim --version | head -n1)"
 
 # Install starship
 curl -sS https://starship.rs/install.sh | sh
+
+# Install lazygit for git management
+cd "$TMP_BUILD_DIR"
+LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
+curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+tar xf lazygit.tar.gz lazygit
+sudo install lazygit -D -t /usr/local/bin/
 
 # Setup config files with stow
 cd "$HOME/dotfiles" || { log_error "~/dotfiles not found"; exit 1; }
