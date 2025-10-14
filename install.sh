@@ -152,6 +152,9 @@ if check_gnome_terminal; then
     log_info "Font installed into the GNOME profile"
 fi
 
+#install zoxide
+curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+
 # tmux post stow installation
 git clone https://github.com/tmux-plugins/tpm ~/dotfiles/tmux/.tmux/plugins/tpm
 ~/.tmux/plugins/tpm/bin/install_plugins
