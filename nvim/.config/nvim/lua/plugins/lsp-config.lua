@@ -15,6 +15,18 @@ return {
         lazy = false,
         opts = {
             auto_install = true,
+            ensure_installed = {
+                "html",
+                "lua_ls",
+                "phpactor",
+                "bashls",
+            },
+            servers = {
+                "html",
+                "lua_ls",
+                "phpactor",
+                "bashls",
+            }
         },
     },
     {
