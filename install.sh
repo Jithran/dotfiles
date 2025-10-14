@@ -117,7 +117,7 @@ if check_gnome_terminal; then
         log_warn "Cound't find a GNOME Terminal Id, font configuration halted"
     else
         gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$PROFILE_ID/ use-system-font false
-        gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$PROFILE_ID/ font "'$FONT_NAAM'"
+        gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$PROFILE_ID/ font "'$FONT_NAME'"
     fi
     log_info "Font installed into the GNOME profile"
 fi
