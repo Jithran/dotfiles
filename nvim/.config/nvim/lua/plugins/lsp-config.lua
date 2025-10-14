@@ -4,6 +4,10 @@ return {
         lazy = false,
         config = function()
             require("mason").setup()
+
+            -- add mason's bin too the PATH
+            local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
+            vim.env.PATH = mason_bin .. ":" .. vim.env.PATH
         end,
     },
     {
@@ -71,26 +75,7 @@ return {
                 end,
             })
 
-            -- local capabilities = require('cmp_nvim_lsp').default_capabilities()
-            --
-            --
-            -- -- local lspconfig = require("lspconfig")
-            -- vim.lsp.config("html", {
-            --     capabilities = capabilities
-            -- })
-            --
-            -- vim.lsp.config("lua_ls", {
-            --     capabilities = capabilities
-            -- })
-            --
-            -- vim.lsp.config("phpactor", {
-            --     capabilities = capabilities
-            -- })
-            --
-            -- vim.lsp.config("bashls", {
-            --     capabilities = capabilities
-            -- })
-
+            -- keymaps
             vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
             vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, {})
             vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, {})

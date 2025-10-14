@@ -53,6 +53,7 @@ sudo apt update && sudo apt upgrade -y
 
 # Install dependencies
 log_info "Installing dependencies..."
+curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash - # for nodejs 24
 sudo apt install -y \
     gh curl ncdu make automake autoconf libtool pkg-config \
     libevent-dev libncurses-dev bison plocate tree neofetch \
