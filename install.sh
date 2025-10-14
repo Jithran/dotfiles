@@ -61,23 +61,33 @@ sudo apt install -y \
     htop fzf nodejs npm
 
 # Install tmux
-log_info "Installing tmux..."
-cd "$TEMP_BUILD_DIR"
-TMUX_VERSION="3.5a"
-wget "https://github.com/tmux/tmux/releases/download/${TMUX_VERSION}/tmux-${TMUX_VERSION}.tar.gz"
-tar -xzf "tmux-${TMUX_VERSION}.tar.gz"
-cd "tmux-${TMUX_VERSION}"
-./configure && make
-sudo make install
-log_info "tmux installed successfully: $(tmux -V)"
+if command -v tmux &> /dev/null
+then
+    log_info "Tmux is already installed: $(tmux -V). Skipping installation"
+else
+    log_info "Installing tmux..."
+    cd "$TEMP_BUILD_DIR"
+    TMUX_VERSION="3.5a"
+    wget "https://github.com/tmux/tmux/releases/download/${TMUX_VERSION}/tmux-${TMUX_VERSION}.tar.gz"
+    tar -xzf "tmux-${TMUX_VERSION}.tar.gz"
+    cd "tmux-${TMUX_VERSION}"
+    ./configure && make
+    sudo make install
+    log_info "tmux installed successfully: $(tmux -V)"
+fi
 
-# Install neovim
-log_info "Installing neovim..."
-cd "$TEMP_BUILD_DIR"
-wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.tar.gz
-sudo tar -xzf nvim-linux-x86_64.tar.gz -C /opt
-sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim
-log_info "neovim installed successfully: $(nvim --version | head -n1)"
+if command -v nvim &> /dev/null
+then
+    log_info "Nvim is already installed: $(nvim --version | head -n1), skipping installation"
+else
+    # Install neovim
+    log_info "Installing neovim..."
+    cd "$TEMP_BUILD_DIR"
+    wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.tar.gz
+    sudo tar -xzf nvim-linux-x86_64.tar.gz -C /opt
+    sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim
+    log_info "neovim installed successfully: $(nvim --version | head -n1)"
+fi
 
 # Install starship
 curl -sS https://starship.rs/install.sh | sh
@@ -99,7 +109,6 @@ cd "$TEMP_BUILD_DIR"
 mkdir -p ~/.local/share/fonts
 wget -q --show-progress -O $FONT_ZIP $FONT_URL
 unzip -q $FONT_ZIP -d ~/.local/share/fonts/
-rm /tmp/$FONT_ZIP
 fc-cache -fv
 
 if check_gnome_terminal; then
