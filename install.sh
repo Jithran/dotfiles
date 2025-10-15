@@ -59,7 +59,7 @@ sudo apt install -y \
     libevent-dev libncurses-dev bison plocate tree neofetch \
     ripgrep tar bpytop stow git build-essential \
     wget software-properties-common bat \
-    htop nodejs npm
+    htop nodejs unzip
 
 # Install fzf
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
