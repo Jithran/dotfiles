@@ -42,3 +42,57 @@ $ ./install.sh
 ```
 
 This script will install all the needed packages, applications and run stow for the different application configurations
+
+## Keyboard Shortcuts
+
+### Tmux
+**Leader Key:** `Ctrl+b` (default tmux prefix)
+
+#### Window & Pane Management
+| Shortcut | Description |
+|----------|-------------|
+| `<leader> v` | Split window vertically |
+| `<leader> s` | Split window horizontally |
+| `<leader> h/j/k/l` | Navigate panes (vim-style) |
+| `Alt+h/j/k/l` | Navigate panes (without prefix) |
+
+#### Pane Resizing
+| Shortcut | Description |
+|----------|-------------|
+| `<leader> H/J/K/L` | Resize pane (large steps: 25/5) |
+| `<leader> Alt+h/j/k/l` | Resize pane (1 line at a time) |
+| `Alt+y/u/i/o` | Resize pane height (2/10/40/70 lines) |
+| `Alt+Y/U/I/O` | Resize pane width (50/107/140/180 columns) |
+
+#### Popups
+| Shortcut | Description |
+|----------|-------------|
+| `<leader> Ctrl+t` | Open terminal popup (80% screen) |
+| `<leader> Ctrl+g` | Open lazygit popup (80% screen) |
+
+### Neovim
+**Leader Key:** `,`
+**Local Leader Key:** `\`
+
+#### General
+| Shortcut | Description |
+|----------|-------------|
+| `jk` (insert mode) | Exit insert mode (alternative to ESC) |
+| `<leader>\|` | Split window right |
+| `<leader>-` | Split window bottom |
+| `<leader>f` | Format file and restore cursor position |
+
+#### File Navigation (Telescope)
+| Shortcut | Description |
+|----------|-------------|
+| `Ctrl+p` | Find files |
+| `Ctrl+g` | Find git files |
+| `<leader>buf` | Browse buffers |
+| `<leader>gp` | Live grep (search in files) |
+
+#### File Tree (Neo-tree)
+| Shortcut | Description |
+|----------|-------------|
+| `Ctrl+n` | Toggle Neo-tree |
+| `<leader>bf` | Show buffers in floating Neo-tree |
+| `o` (in Neo-tree) | Open file/folder |
