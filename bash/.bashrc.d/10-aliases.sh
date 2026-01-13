@@ -1,6 +1,9 @@
 # Application renaming
 alias vim="nvim"
 
+# File listing
+alias ls="ls -hal --color=auto"
+
 # On Ubuntu/Debian, bat is installed as batcat
 # On Fedora, it's just bat
 if command -v batcat &> /dev/null; then
