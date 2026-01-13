@@ -27,6 +27,19 @@ log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
+# Detect OS
+detect_os() {
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        OS=$ID
+        OS_VERSION=$VERSION_ID
+    else
+        log_error "Cannot detect OS. /etc/os-release not found."
+        exit 1
+    fi
+    log_info "Detected OS: $OS $OS_VERSION"
+}
+
 check_gnome_terminal() {
     # check if we hava a gnome terminal for nerdfont installation
     if gsettings list-schemas | grep -q "$GNOME_TERMINAL_SCHEMA"; then
@@ -43,27 +56,63 @@ cleanup() {
     rm -rf "$TEMP_BUILD_DIR"
 }
 
-trap cleanup EXIT
-
 log_info "Starting installation..."
 
-# Update system
-log_info "Updating system packages..."
-sudo apt update && sudo apt upgrade -y
+# Detect OS first
+detect_os
 
-# Install dependencies
-log_info "Installing dependencies..."
-curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash - # for nodejs 24
-sudo apt install -y \
-    gh curl ncdu make automake autoconf libtool pkg-config \
-    libevent-dev libncurses-dev bison plocate tree neofetch \
-    ripgrep tar bpytop stow git build-essential \
-    wget software-properties-common bat \
-    htop nodejs unzip
+# Update system and install dependencies based on OS
+if [ "$OS" = "ubuntu" ] || [ "$OS" = "debian" ]; then
+    log_info "Updating system packages..."
+    sudo apt update && sudo apt upgrade -y
+
+    log_info "Installing dependencies..."
+    curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash - # for nodejs 24
+    sudo apt install -y \
+        gh curl ncdu make automake autoconf libtool pkg-config \
+        libevent-dev libncurses-dev bison plocate tree neofetch \
+        ripgrep tar bpytop stow git build-essential \
+        wget software-properties-common bat \
+        htop nodejs unzip
+
+elif [ "$OS" = "fedora" ]; then
+    log_info "Updating packages for Fedora..."
+    sudo dnf check-update || true
+    sudo dnf upgrade -y --skip-broken || log_warn "Some packages could not be upgraded"
+
+    # Install Node.js 24 on Fedora
+    log_info "Setting up Node.js repository..."
+    sudo dnf install -y nodejs npm || log_warn "Node.js may already be installed"
+
+    # Install dependencies
+    log_info "Installing dependencies..."
+    sudo dnf install -y --skip-unavailable \
+        gh curl ncdu make automake autoconf libtool pkg-config \
+        libevent-devel ncurses-devel bison plocate tree fastfetch \
+        ripgrep tar stow git \
+        wget bat htop nodejs unzip python3-pip \
+        @development-tools
+
+    # Install bpytop via pip since it's not in Fedora repos
+    if ! command -v bpytop &> /dev/null; then
+        log_info "Installing bpytop via pip..."
+        pip3 install bpytop --user || log_warn "Failed to install bpytop"
+    fi
+else
+    log_error "Unsupported OS: $OS"
+    log_error "This script supports Ubuntu and Fedora only."
+    exit 1
+fi
 
 # Install fzf
-git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-~/.fzf/install --all
+if command -v fzf &> /dev/null; then
+    log_info "fzf is already installed: $(fzf --version). Skipping installation"
+else
+    log_info "Installing fzf..."
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+    ~/.fzf/install --all
+    log_info "fzf installed successfully"
+fi
 
 # Install tmux
 if command -v tmux &> /dev/null
@@ -95,14 +144,26 @@ else
 fi
 
 # Install starship
-curl -sS https://starship.rs/install.sh | sh
+if command -v starship &> /dev/null; then
+    log_info "Starship is already installed: $(starship --version). Skipping installation"
+else
+    log_info "Installing starship..."
+    curl -sS https://starship.rs/install.sh | sh
+    log_info "Starship installed successfully"
+fi
 
 # Install lazygit for git management
-cd "$TEMP_BUILD_DIR"
-LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
-curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
-tar xf lazygit.tar.gz lazygit
-sudo install lazygit -D -t /usr/local/bin/
+if command -v lazygit &> /dev/null; then
+    log_info "lazygit is already installed: $(lazygit --version | head -n1). Skipping installation"
+else
+    log_info "Installing lazygit..."
+    cd "$TEMP_BUILD_DIR"
+    LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
+    curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+    tar xf lazygit.tar.gz lazygit
+    sudo install lazygit -D -t /usr/local/bin/
+    log_info "lazygit installed successfully"
+fi
 
 # Setup config files with stow
 cd "$HOME/dotfiles" || { log_error "~/dotfiles not found"; exit 1; }
@@ -110,22 +171,33 @@ log_info "Stowing configs from ~/dotfiles..."
 stow bash nvim tmux bpytop starship 2>&1 || log_warn "Stow had conflicts - backup existing configs if needed"
 
 # Install the nerdfont I like to use in the gnome terminal
-cd "$TEMP_BUILD_DIR"
-mkdir -p ~/.local/share/fonts
-wget -q --show-progress -O $FONT_ZIP $FONT_URL
-unzip -q $FONT_ZIP -d ~/.local/share/fonts/
-fc-cache -fv
+if fc-list | grep -qi "Mononoki"; then
+    log_info "Mononoki Nerd Font is already installed. Skipping installation"
+else
+    log_info "Installing Mononoki Nerd Font..."
+    cd "$TEMP_BUILD_DIR"
+    mkdir -p ~/.local/share/fonts
+    wget -q --show-progress -O $FONT_ZIP $FONT_URL
+    unzip -q $FONT_ZIP -d ~/.local/share/fonts/
+    fc-cache -fv
+    log_info "Mononoki Nerd Font installed successfully"
+fi
 
 # install nemo if we need to
 if ! command -v nemo &> /dev/null
 then
-    echo "Installing nemo"
-    sudo apt update
-    sudo apt install -y nemo
+    log_info "Installing nemo file manager..."
+    if [ "$OS" = "ubuntu" ] || [ "$OS" = "debian" ]; then
+        sudo apt update
+        sudo apt install -y nemo
+    elif [ "$OS" = "fedora" ]; then
+        sudo dnf install -y nemo
+    fi
+
     if [ $? -eq 0 ]; then
-        echo "Nemo is installed ✅"
+        log_info "Nemo is installed ✅"
     else
-        echo "There was an error installing nemo ❌"
+        log_error "There was an error installing nemo ❌"
     fi
 fi
 
@@ -156,12 +228,30 @@ if check_gnome_terminal; then
     log_info "Font installed into the GNOME profile"
 fi
 
-#install zoxide
-curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+# Install zoxide
+if command -v zoxide &> /dev/null; then
+    log_info "zoxide is already installed: $(zoxide --version). Skipping installation"
+else
+    log_info "Installing zoxide..."
+    curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+    log_info "zoxide installed successfully"
+fi
 
 # tmux post stow installation
-git clone https://github.com/tmux-plugins/tpm ~/dotfiles/tmux/.tmux/plugins/tpm
-~/.tmux/plugins/tpm/bin/install_plugins
+if [ -d ~/dotfiles/tmux/.tmux/plugins/tpm ]; then
+    log_info "tmux plugin manager (tpm) is already installed. Skipping installation"
+else
+    log_info "Installing tmux plugin manager (tpm)..."
+    git clone https://github.com/tmux-plugins/tpm ~/dotfiles/tmux/.tmux/plugins/tpm
+    log_info "tpm installed successfully"
+fi
+
+if [ -f ~/.tmux/plugins/tpm/bin/install_plugins ]; then
+    log_info "Installing tmux plugins..."
+    ~/.tmux/plugins/tpm/bin/install_plugins || log_warn "Some tmux plugins failed to install - you can install them later with prefix + I"
+else
+    log_warn "tpm not found at ~/.tmux/plugins/tpm - plugins not installed. Run after stow is active."
+fi
 
 # Update mlocate database
 log_info "Updating mlocate database..."

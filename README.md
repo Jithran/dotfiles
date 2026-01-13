@@ -8,11 +8,24 @@ The main packages I currently use are:
 - tmux with some styling and plugins
 - neovim instead of vim. The default vim command is overwritten with the nvim version
 
+## Supported Systems
+This configuration supports:
+- **Ubuntu/Debian** - using apt package manager
+- **Fedora** - using dnf package manager
+
+The install script automatically detects your OS and uses the appropriate package manager and package names.
+
 ## Requirements
 Ensure you have git installed on your system. All other packages are installed when you run the install.sh file in the root of your dotfiles directory.
 
+**Ubuntu/Debian:**
 ```
 $ sudo apt install git
+```
+
+**Fedora:**
+```
+$ sudo dnf install git
 ```
 
 ## Installation

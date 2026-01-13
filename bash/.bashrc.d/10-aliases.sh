@@ -1,6 +1,11 @@
 # Application renaming
 alias vim="nvim"
-alias bat="batcat"
+
+# On Ubuntu/Debian, bat is installed as batcat
+# On Fedora, it's just bat
+if command -v batcat &> /dev/null; then
+    alias bat="batcat"
+fi
 
 # Helpers
 alias myip="curl http://ipecho.net/plain; echo"
