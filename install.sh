@@ -89,7 +89,7 @@ elif [ "$OS" = "fedora" ]; then
     sudo dnf install -y --skip-unavailable \
         gh curl ncdu make automake autoconf libtool pkg-config \
         libevent-devel ncurses-devel bison plocate tree fastfetch \
-        ripgrep tar stow git \
+        ripgrep tar stow git k9s \
         wget bat htop nodejs unzip python3-pip \
         @development-tools
 

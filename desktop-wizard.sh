@@ -338,6 +338,58 @@ else
 fi
 
 # ============================================================
+# kubectl (Kubernetes CLI)
+# ============================================================
+log_step "Installing kubectl..."
+if command -v kubectl &> /dev/null; then
+    log_info "kubectl is already installed: $(kubectl version --client --short 2>/dev/null || kubectl version --client)"
+else
+    log_info "Adding Kubernetes repository..."
+    cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.31/rpm/
+enabled=1
+gpgcheck=1
+gpgkey=https://pkgs.k8s.io/core:/stable:/v1.31/rpm/repodata/repomd.xml.key
+EOF
+
+    log_info "Installing kubectl..."
+    sudo dnf install -y kubectl
+    log_info "kubectl installed successfully"
+    kubectl version --client
+fi
+
+# ============================================================
+# Freelens (Kubernetes IDE)
+# ============================================================
+log_step "Installing Freelens..."
+if command -v freelens &> /dev/null; then
+    log_info "Freelens is already installed. Skipping."
+else
+    log_info "Downloading and installing Freelens..."
+    TEMP_DIR=$(mktemp -d)
+    cd "$TEMP_DIR"
+
+    # Get the latest Freelens release RPM for amd64
+    FREELENS_URL=$(curl -s https://api.github.com/repos/freelensapp/freelens/releases/latest | grep "browser_download_url.*amd64.rpm" | grep -v "sha256" | cut -d '"' -f 4)
+
+    if [ -z "$FREELENS_URL" ]; then
+        log_error "Failed to fetch Freelens download URL"
+        log_warn "Please download manually from: https://github.com/freelensapp/freelens/releases"
+    else
+        log_info "Downloading from: $FREELENS_URL"
+        wget -q --show-progress -O freelens.rpm "$FREELENS_URL"
+
+        log_info "Installing Freelens..."
+        sudo dnf install -y ./freelens.rpm
+        log_info "Freelens installed successfully"
+    fi
+
+    rm -rf "$TEMP_DIR"
+fi
+
+# ============================================================
 # GitHub CLI Authentication
 # ============================================================
 log_step "GitHub CLI Authentication..."
@@ -383,6 +435,8 @@ echo "  ✓ JetBrains Toolbox"
 echo "  ✓ Meld"
 echo "  ✓ Discord"
 echo "  ✓ Google Chrome"
+echo "  ✓ kubectl"
+echo "  ✓ Freelens"
 echo ""
 log_warn "IMPORTANT NOTES:"
 echo "  • If Docker was installed, log out and back in for group changes"
