@@ -259,3 +259,41 @@ sudo updatedb || log_warn "Failed to update mlocate database"
 
 log_info "Installation complete!"
 log_info "Please restart your terminal or run: source ~/.bashrc"
+
+# Ask if user wants to run the desktop development wizard
+echo ""
+echo -e "${YELLOW}=========================================${NC}"
+echo -e "${YELLOW}Desktop Development Environment Wizard${NC}"
+echo -e "${YELLOW}=========================================${NC}"
+echo ""
+echo "The desktop wizard can install additional development tools:"
+echo "  • Docker"
+echo "  • .NET SDK 9.0 & 10.0"
+echo "  • Visual Studio Code"
+echo "  • JetBrains Toolbox"
+echo "  • Google Chrome"
+echo "  • Discord"
+echo "  • Meld (diff tool)"
+echo "  • DisplayLink drivers"
+echo "  • NVIDIA drivers (if applicable)"
+echo "  • Claude CLI"
+echo ""
+echo -e "${YELLOW}Note: This wizard is currently only supported on Fedora${NC}"
+echo ""
+
+if [ "$OS" = "fedora" ]; then
+    read -p "Would you like to run the desktop development wizard now? (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        log_info "Starting desktop wizard..."
+        if [ -f "$HOME/dotfiles/desktop-wizard.sh" ]; then
+            "$HOME/dotfiles/desktop-wizard.sh"
+        else
+            log_error "Desktop wizard not found at $HOME/dotfiles/desktop-wizard.sh"
+        fi
+    else
+        log_info "Skipping desktop wizard. You can run it later with: ~/dotfiles/desktop-wizard.sh"
+    fi
+else
+    log_info "Desktop wizard is not available for $OS. You can run it manually on Fedora with: ~/dotfiles/desktop-wizard.sh"
+fi

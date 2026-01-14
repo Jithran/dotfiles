@@ -43,6 +43,34 @@ $ ./install.sh
 
 This script will install all the needed packages, applications and run stow for the different application configurations
 
+At the end of the installation, you'll be asked if you want to run the **Desktop Development Wizard** which installs additional development tools (Docker, .NET, VS Code, etc.). This wizard is currently only supported on Fedora.
+
+## Desktop Development Wizard
+
+The desktop wizard (`desktop-wizard.sh`) can be run separately to install additional development tools on Fedora systems:
+
+```bash
+$ ./desktop-wizard.sh
+```
+
+### Installed Tools
+The wizard installs and configures:
+- **RPM Fusion** repositories (free & nonfree)
+- **Docker** with user permissions
+- **.NET SDK** 9.0 & 10.0 with development certificates
+- **Visual Studio Code**
+- **JetBrains Toolbox**
+- **Google Chrome**
+- **Discord**
+- **Meld** (visual diff and merge tool)
+- **DisplayLink** drivers (for USB monitors)
+- **NVIDIA** drivers (if NVIDIA GPU is detected)
+- **Claude CLI** with token configuration
+- **System configuration** (inotify limits for development)
+- **GitHub CLI** authentication
+
+The wizard checks if tools are already installed and skips them, making it safe to re-run.
+
 ## Keyboard Shortcuts
 
 ### Tmux
