@@ -154,17 +154,23 @@ fi
 dotnet linux-dev-certs install
 
 # ============================================================
-# DisplayLink Driver
+# DisplayLink Driver (optional - for external monitors/docking stations)
 # ============================================================
-log_step "Installing DisplayLink driver..."
+log_step "DisplayLink driver (for docking stations/external monitors)..."
 if rpm -qa | grep -q "displaylink"; then
     log_info "DisplayLink is already installed. Skipping."
 else
-    log_info "Enabling DisplayLink COPR repository..."
-    sudo dnf copr enable -y crashdummy/Displaylink
-    sudo dnf update -y
-    log_info "Installing DisplayLink..."
-    sudo dnf install -y displaylink
+    read -p "Install DisplayLink driver? (Only needed for DisplayLink docking stations, skip on VMs) (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        log_info "Enabling DisplayLink COPR repository..."
+        sudo dnf copr enable -y crashdummy/Displaylink
+        sudo dnf update -y
+        log_info "Installing DisplayLink..."
+        sudo dnf install -y displaylink
+    else
+        log_info "Skipping DisplayLink installation."
+    fi
 fi
 
 # ============================================================
@@ -190,6 +196,43 @@ if lspci | grep -i nvidia &> /dev/null; then
     fi
 else
     log_info "No NVIDIA GPU detected. Skipping NVIDIA driver installation."
+fi
+
+# ============================================================
+# Google Chrome (installed early for browser-based authentication)
+# ============================================================
+log_step "Installing Google Chrome..."
+if command -v google-chrome &> /dev/null; then
+    log_info "Google Chrome is already installed: $(google-chrome --version)"
+else
+    log_info "Adding Google Chrome repository..."
+    sudo tee /etc/yum.repos.d/google-chrome.repo > /dev/null <<EOF
+[google-chrome]
+name=google-chrome
+baseurl=http://dl.google.com/linux/chrome/rpm/stable/x86_64
+enabled=1
+gpgcheck=1
+gpgkey=https://dl.google.com/linux/linux_signing_key.pub
+EOF
+
+    log_info "Installing Google Chrome..."
+    sudo dnf install -y google-chrome-stable
+    log_info "Google Chrome installed successfully"
+fi
+
+# Set Chrome as default browser if installed
+if command -v google-chrome &> /dev/null; then
+    CURRENT_BROWSER=$(xdg-settings get default-web-browser 2>/dev/null || echo "")
+    if [ "$CURRENT_BROWSER" != "google-chrome.desktop" ]; then
+        read -p "Set Google Chrome as default browser? (Y/n): " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+            xdg-settings set default-web-browser google-chrome.desktop
+            log_info "Google Chrome set as default browser"
+        fi
+    else
+        log_info "Google Chrome is already the default browser"
+    fi
 fi
 
 # ============================================================
@@ -235,6 +278,7 @@ if [ -f ~/.local/share/JetBrains/Toolbox/bin/jetbrains-toolbox ]; then
     log_info "JetBrains Toolbox is already installed. Skipping."
 else
     log_info "Downloading and installing JetBrains Toolbox..."
+    ORIGINAL_DIR=$(pwd)
     TEMP_DIR=$(mktemp -d)
     cd "$TEMP_DIR"
 
@@ -293,6 +337,7 @@ DESKTOP
         fi
     fi
 
+    cd "$ORIGINAL_DIR"
     rm -rf "$TEMP_DIR"
 fi
 
@@ -318,28 +363,6 @@ else
     log_info "Installing Discord..."
     sudo dnf install -y discord
     log_info "Discord installed successfully"
-fi
-
-# ============================================================
-# Google Chrome
-# ============================================================
-log_step "Installing Google Chrome..."
-if command -v google-chrome &> /dev/null; then
-    log_info "Google Chrome is already installed: $(google-chrome --version)"
-else
-    log_info "Adding Google Chrome repository..."
-    sudo tee /etc/yum.repos.d/google-chrome.repo > /dev/null <<EOF
-[google-chrome]
-name=google-chrome
-baseurl=http://dl.google.com/linux/chrome/rpm/stable/x86_64
-enabled=1
-gpgcheck=1
-gpgkey=https://dl.google.com/linux/linux_signing_key.pub
-EOF
-
-    log_info "Installing Google Chrome..."
-    sudo dnf install -y google-chrome-stable
-    log_info "Google Chrome installed successfully"
 fi
 
 # ============================================================
@@ -385,6 +408,7 @@ if command -v freelens &> /dev/null; then
     log_info "Freelens is already installed. Skipping."
 else
     log_info "Downloading and installing Freelens..."
+    ORIGINAL_DIR=$(pwd)
     TEMP_DIR=$(mktemp -d)
     cd "$TEMP_DIR"
 
@@ -403,6 +427,7 @@ else
         log_info "Freelens installed successfully"
     fi
 
+    cd "$ORIGINAL_DIR"
     rm -rf "$TEMP_DIR"
 fi
 
@@ -485,14 +510,14 @@ log_info "Installed components:"
 echo "  ✓ RPM Fusion repositories"
 echo "  ✓ Docker (if installed)"
 echo "  ✓ .NET SDK 9.0 & 10.0"
-echo "  ✓ DisplayLink driver"
+echo "  ✓ DisplayLink driver (if selected)"
 echo "  ✓ NVIDIA drivers (if applicable)"
+echo "  ✓ Google Chrome"
 echo "  ✓ Claude CLI"
 echo "  ✓ Visual Studio Code"
 echo "  ✓ JetBrains Toolbox"
 echo "  ✓ Meld"
 echo "  ✓ Discord"
-echo "  ✓ Google Chrome"
 echo "  ✓ kubectl"
 echo "  ✓ Freelens"
 echo ""
