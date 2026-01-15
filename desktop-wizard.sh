@@ -438,9 +438,22 @@ log_step "Installing ExpanDrive..."
 if command -v expandrive &> /dev/null || [ -f /usr/bin/expandrive ]; then
     log_info "ExpanDrive is already installed. Skipping."
 else
-    log_info "ExpanDrive requires manual download from https://www.expandrive.com/desktop/linux/"
-    log_warn "Please download the RPM package and install with: sudo dnf install ./expandrive-*.rpm"
-    read -p "Press Enter to continue..."
+    log_info "Downloading and installing ExpanDrive..."
+    ORIGINAL_DIR=$(pwd)
+    TEMP_DIR=$(mktemp -d)
+    cd "$TEMP_DIR"
+
+    if wget -q --show-progress -O expandrive.rpm "https://www.expandrive.com/api/download/expandrive?platform=linux&ext=rpm"; then
+        log_info "Installing ExpanDrive..."
+        sudo dnf install -y ./expandrive.rpm
+        log_info "ExpanDrive installed successfully"
+    else
+        log_error "Failed to download ExpanDrive"
+        log_warn "Please download manually from: https://www.expandrive.com/desktop/linux/"
+    fi
+
+    cd "$ORIGINAL_DIR"
+    rm -rf "$TEMP_DIR"
 fi
 
 # ============================================================
@@ -585,12 +598,12 @@ echo "  ✓ Visual Studio Code"
 echo "  ✓ JetBrains Toolbox"
 echo "  ✓ Meld"
 echo "  ✓ Discord"
+echo "  ✓ ExpanDrive"
 echo "  ✓ kubectl"
 echo "  ✓ Freelens"
 echo ""
 log_warn "IMPORTANT NOTES:"
 echo "  • If Docker was installed, log out and back in for group changes"
 echo "  • If NVIDIA drivers were installed, reboot your system"
-echo "  • ExpanDrive requires manual download if needed"
 echo ""
 log_info "Happy coding! 🚀"
