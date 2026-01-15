@@ -429,6 +429,47 @@ else
 fi
 
 # ============================================================
+# Git Global Configuration
+# ============================================================
+log_step "Git Global Configuration..."
+GIT_USER_NAME=$(git config --global user.name 2>/dev/null || echo "")
+GIT_USER_EMAIL=$(git config --global user.email 2>/dev/null || echo "")
+
+if [ -z "$GIT_USER_NAME" ] || [ -z "$GIT_USER_EMAIL" ]; then
+    log_info "Git global user configuration is not complete."
+    [ -z "$GIT_USER_NAME" ] && log_info "  - user.name is not set"
+    [ -z "$GIT_USER_EMAIL" ] && log_info "  - user.email is not set"
+
+    read -p "Do you want to configure git user settings now? (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        if [ -z "$GIT_USER_NAME" ]; then
+            read -p "Enter your name for git commits: " GIT_NAME
+            if [ -n "$GIT_NAME" ]; then
+                git config --global user.name "$GIT_NAME"
+                log_info "Set user.name to: $GIT_NAME"
+            fi
+        fi
+
+        if [ -z "$GIT_USER_EMAIL" ]; then
+            read -p "Enter your email for git commits: " GIT_EMAIL
+            if [ -n "$GIT_EMAIL" ]; then
+                git config --global user.email "$GIT_EMAIL"
+                log_info "Set user.email to: $GIT_EMAIL"
+            fi
+        fi
+    else
+        log_info "You can configure later with:"
+        log_info "  git config --global user.name \"Your Name\""
+        log_info "  git config --global user.email \"your@email.com\""
+    fi
+else
+    log_info "Git global user configuration is already set:"
+    log_info "  user.name: $GIT_USER_NAME"
+    log_info "  user.email: $GIT_USER_EMAIL"
+fi
+
+# ============================================================
 # Final Summary
 # ============================================================
 echo ""
