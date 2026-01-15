@@ -293,7 +293,7 @@ if command -v google-chrome &> /dev/null; then
         read -p "Set Google Chrome as default browser? (Y/n): " -n 1 -r
         echo
         if [[ ! $REPLY =~ ^[Nn]$ ]]; then
-            xdg-settings set default-web-browser google-chrome.desktop
+            xdg-settings set default-web-browser google-chrome.desktop 2>/dev/null
             log_info "Google Chrome set as default browser"
         fi
     else
