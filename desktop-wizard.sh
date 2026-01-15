@@ -84,6 +84,72 @@ else
 fi
 
 # ============================================================
+# VM Guest Tools (if running in a virtual machine)
+# ============================================================
+log_step "Checking for virtual machine environment..."
+VIRT_TYPE=$(systemd-detect-virt 2>/dev/null || echo "none")
+
+if [ "$VIRT_TYPE" != "none" ]; then
+    log_info "Virtual machine detected: $VIRT_TYPE"
+
+    case "$VIRT_TYPE" in
+        vmware)
+            if rpm -qa | grep -q "open-vm-tools"; then
+                log_info "VMware guest tools are already installed. Skipping."
+            else
+                log_info "Installing VMware guest tools..."
+                sudo dnf install -y open-vm-tools open-vm-tools-desktop
+                sudo systemctl enable --now vmtoolsd.service
+                log_info "VMware guest tools installed successfully"
+            fi
+            ;;
+        oracle)
+            if rpm -qa | grep -q "virtualbox-guest-additions"; then
+                log_info "VirtualBox guest additions are already installed. Skipping."
+            else
+                log_info "Installing VirtualBox guest additions..."
+                sudo dnf install -y virtualbox-guest-additions
+                log_info "VirtualBox guest additions installed successfully"
+            fi
+            ;;
+        kvm|qemu)
+            QEMU_INSTALLED=false
+            if rpm -qa | grep -q "qemu-guest-agent"; then
+                log_info "QEMU guest agent is already installed."
+                QEMU_INSTALLED=true
+            fi
+            if rpm -qa | grep -q "spice-vdagent"; then
+                log_info "SPICE agent is already installed."
+            elif [ "$QEMU_INSTALLED" = true ]; then
+                log_info "Skipping SPICE agent (QEMU tools already present)."
+            else
+                log_info "Installing KVM/QEMU guest tools..."
+                sudo dnf install -y qemu-guest-agent spice-vdagent
+                sudo systemctl enable --now qemu-guest-agent.service
+                sudo systemctl enable --now spice-vdagentd.service
+                log_info "KVM/QEMU guest tools installed successfully"
+            fi
+            ;;
+        microsoft)
+            if rpm -qa | grep -q "hyperv-daemons"; then
+                log_info "Hyper-V daemons are already installed. Skipping."
+            else
+                log_info "Installing Hyper-V guest tools..."
+                sudo dnf install -y hyperv-daemons
+                sudo systemctl enable --now hypervkvpd.service
+                sudo systemctl enable --now hypervvssd.service
+                log_info "Hyper-V guest tools installed successfully"
+            fi
+            ;;
+        *)
+            log_info "Unknown virtualization type: $VIRT_TYPE. Skipping guest tools."
+            ;;
+    esac
+else
+    log_info "Not running in a virtual machine. Skipping guest tools."
+fi
+
+# ============================================================
 # Docker Installation
 # ============================================================
 log_step "Installing Docker..."
@@ -508,6 +574,7 @@ log_info "========================================="
 echo ""
 log_info "Installed components:"
 echo "  ✓ RPM Fusion repositories"
+echo "  ✓ VM guest tools (if in VM)"
 echo "  ✓ Docker (if installed)"
 echo "  ✓ .NET SDK 9.0 & 10.0"
 echo "  ✓ DisplayLink driver (if selected)"
