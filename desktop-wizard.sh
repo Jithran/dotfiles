@@ -141,6 +141,10 @@ fi
 
 # Install and configure linux-dev-certs
 log_info "Installing linux development certificates..."
+
+# Ensure .dotnet/tools is in PATH for this session
+export PATH="$PATH:$HOME/.dotnet/tools"
+
 if dotnet tool list -g | grep -q "linux-dev-certs"; then
     log_info "linux-dev-certs is already installed. Updating..."
     dotnet tool update -g linux-dev-certs
