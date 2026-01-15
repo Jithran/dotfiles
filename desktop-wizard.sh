@@ -253,24 +253,37 @@ else
         wget -q --show-progress -O jetbrains-toolbox.tar.gz "$TOOLBOX_URL"
         tar -xzf jetbrains-toolbox.tar.gz
 
-        # Find the jetbrains-toolbox binary (it might be directly in the extracted dir or in a subdir)
-        TOOLBOX_BINARY=$(find . -type f -name 'jetbrains-toolbox' -executable | head -n1)
+        # Find the extracted directory containing jetbrains-toolbox
+        TOOLBOX_DIR=$(find . -maxdepth 1 -type d -name 'jetbrains-toolbox-*' | head -n1)
 
-        if [ -n "$TOOLBOX_BINARY" ]; then
+        if [ -n "$TOOLBOX_DIR" ] && [ -f "$TOOLBOX_DIR/bin/jetbrains-toolbox" ]; then
+            # Copy entire directory contents (includes JRE and other required files)
             mkdir -p ~/.local/share/JetBrains/Toolbox/bin
-            cp "$TOOLBOX_BINARY" ~/.local/share/JetBrains/Toolbox/bin/jetbrains-toolbox
+            cp -r "$TOOLBOX_DIR"/bin/* ~/.local/share/JetBrains/Toolbox/bin/
             chmod +x ~/.local/share/JetBrains/Toolbox/bin/jetbrains-toolbox
 
-            # Add to PATH if not already there
-            if [[ ":$PATH:" != *":$HOME/.local/share/JetBrains/Toolbox/bin:"* ]]; then
-                log_info "Run JetBrains Toolbox with: ~/.local/share/JetBrains/Toolbox/bin/jetbrains-toolbox"
-            fi
+            # Create .desktop file for application menu
+            mkdir -p ~/.local/share/applications
+            cat > ~/.local/share/applications/jetbrains-toolbox.desktop << 'DESKTOP'
+[Desktop Entry]
+Name=JetBrains Toolbox
+Exec=$HOME/.local/share/JetBrains/Toolbox/bin/jetbrains-toolbox %u
+Icon=$HOME/.local/share/JetBrains/Toolbox/bin/toolbox-tray-color.png
+Type=Application
+Categories=Development;IDE;
+Terminal=false
+StartupNotify=true
+StartupWMClass=jetbrains-toolbox
+Comment=Manage JetBrains IDEs
+DESKTOP
+            # Replace $HOME with actual path
+            sed -i "s|\$HOME|$HOME|g" ~/.local/share/applications/jetbrains-toolbox.desktop
 
             log_info "JetBrains Toolbox installed successfully"
             log_info "Starting JetBrains Toolbox..."
             nohup ~/.local/share/JetBrains/Toolbox/bin/jetbrains-toolbox &> /dev/null &
         else
-            log_error "Failed to find JetBrains Toolbox binary after extraction"
+            log_error "Failed to find JetBrains Toolbox directory after extraction"
             log_warn "Contents of extracted archive:"
             ls -la
         fi
