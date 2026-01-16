@@ -3,6 +3,8 @@ alias vim="nvim"
 
 # File listing
 alias ls="ls -hal --color=auto"
+alias fd="fd --hidden --exclude .git"
+alias tree="tree -a -I '.git'"
 
 # On Ubuntu/Debian, bat is installed as batcat
 # On Fedora, it's just bat

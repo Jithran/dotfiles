@@ -73,7 +73,7 @@ if [ "$OS" = "ubuntu" ] || [ "$OS" = "debian" ]; then
         libevent-dev libncurses-dev bison plocate tree neofetch \
         ripgrep tar bpytop stow git build-essential \
         wget software-properties-common bat \
-        htop nodejs unzip
+        htop nodejs unzip fd
 
 elif [ "$OS" = "fedora" ]; then
     log_info "Updating packages for Fedora..."
