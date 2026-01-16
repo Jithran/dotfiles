@@ -320,141 +320,12 @@ else
 fi
 
 # ============================================================
-# Visual Studio Code
+# Optional Applications
 # ============================================================
-log_step "Installing Visual Studio Code..."
-if command -v code &> /dev/null; then
-    log_info "Visual Studio Code is already installed: $(code --version | head -n1)"
-else
-    log_info "Adding Microsoft repository..."
-    sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
-    echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\nautorefresh=1\ntype=rpm-md\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" | sudo tee /etc/yum.repos.d/vscode.repo > /dev/null
-
-    log_info "Installing Visual Studio Code..."
-    sudo dnf check-update || true
-    sudo dnf install -y code
-    log_info "Visual Studio Code installed successfully"
-fi
-
+# NOTE: Visual Studio Code, JetBrains Toolbox, Meld, Discord,
+# ExpanDrive, and Freelens have been moved to application-wizard.sh
+# Run ./application-wizard.sh to install optional applications
 # ============================================================
-# JetBrains Toolbox
-# ============================================================
-log_step "Installing JetBrains Toolbox..."
-if [ -f ~/.local/share/JetBrains/Toolbox/bin/jetbrains-toolbox ]; then
-    log_info "JetBrains Toolbox is already installed. Skipping."
-else
-    log_info "Downloading and installing JetBrains Toolbox..."
-    ORIGINAL_DIR=$(pwd)
-    TEMP_DIR=$(mktemp -d)
-    cd "$TEMP_DIR"
-
-    # Get the latest version URL - improved parsing
-    TOOLBOX_JSON=$(curl -s 'https://data.services.jetbrains.com/products/releases?code=TBA&latest=true&type=release')
-
-    # Try to extract URL using python if available, otherwise use sed
-    if command -v python3 &> /dev/null; then
-        TOOLBOX_URL=$(echo "$TOOLBOX_JSON" | python3 -c "import sys, json; data = json.load(sys.stdin); print(data['TBA'][0]['downloads']['linux']['link'])" 2>/dev/null)
-    else
-        # Fallback to sed/grep
-        TOOLBOX_URL=$(echo "$TOOLBOX_JSON" | grep -o '"linux"[[:space:]]*:[[:space:]]*{[^}]*"link"[[:space:]]*:[[:space:]]*"[^"]*"' | grep -o 'https://[^"]*')
-    fi
-
-    if [ -z "$TOOLBOX_URL" ]; then
-        log_error "Failed to fetch JetBrains Toolbox download URL"
-        log_warn "Please download manually from: https://www.jetbrains.com/toolbox-app/"
-    else
-        log_info "Downloading from: $TOOLBOX_URL"
-        wget -q --show-progress -O jetbrains-toolbox.tar.gz "$TOOLBOX_URL"
-        tar -xzf jetbrains-toolbox.tar.gz
-
-        # Find the extracted directory containing jetbrains-toolbox
-        TOOLBOX_DIR=$(find . -maxdepth 1 -type d -name 'jetbrains-toolbox-*' | head -n1)
-
-        if [ -n "$TOOLBOX_DIR" ] && [ -f "$TOOLBOX_DIR/bin/jetbrains-toolbox" ]; then
-            # Copy entire directory contents (includes JRE and other required files)
-            mkdir -p ~/.local/share/JetBrains/Toolbox/bin
-            cp -r "$TOOLBOX_DIR"/bin/* ~/.local/share/JetBrains/Toolbox/bin/
-            chmod +x ~/.local/share/JetBrains/Toolbox/bin/jetbrains-toolbox
-
-            # Create .desktop file for application menu
-            mkdir -p ~/.local/share/applications
-            cat > ~/.local/share/applications/jetbrains-toolbox.desktop << 'DESKTOP'
-[Desktop Entry]
-Name=JetBrains Toolbox
-Exec=$HOME/.local/share/JetBrains/Toolbox/bin/jetbrains-toolbox %u
-Icon=$HOME/.local/share/JetBrains/Toolbox/bin/toolbox-tray-color.png
-Type=Application
-Categories=Development;IDE;
-Terminal=false
-StartupNotify=true
-StartupWMClass=jetbrains-toolbox
-Comment=Manage JetBrains IDEs
-DESKTOP
-            # Replace $HOME with actual path
-            sed -i "s|\$HOME|$HOME|g" ~/.local/share/applications/jetbrains-toolbox.desktop
-
-            log_info "JetBrains Toolbox installed successfully"
-            log_info "Starting JetBrains Toolbox..."
-            nohup ~/.local/share/JetBrains/Toolbox/bin/jetbrains-toolbox &> /dev/null &
-        else
-            log_error "Failed to find JetBrains Toolbox directory after extraction"
-            log_warn "Contents of extracted archive:"
-            ls -la
-        fi
-    fi
-
-    cd "$ORIGINAL_DIR"
-    rm -rf "$TEMP_DIR"
-fi
-
-# ============================================================
-# Meld (visual diff and merge tool)
-# ============================================================
-log_step "Installing Meld..."
-if command -v meld &> /dev/null; then
-    log_info "Meld is already installed: $(meld --version)"
-else
-    log_info "Installing Meld..."
-    sudo dnf install -y meld
-    log_info "Meld installed successfully"
-fi
-
-# ============================================================
-# Discord
-# ============================================================
-log_step "Installing Discord..."
-if command -v discord &> /dev/null || [ -f /usr/bin/discord ]; then
-    log_info "Discord is already installed. Skipping."
-else
-    log_info "Installing Discord..."
-    sudo dnf install -y discord
-    log_info "Discord installed successfully"
-fi
-
-# ============================================================
-# ExpanDrive
-# ============================================================
-log_step "Installing ExpanDrive..."
-if command -v expandrive &> /dev/null || [ -f /usr/bin/expandrive ]; then
-    log_info "ExpanDrive is already installed. Skipping."
-else
-    log_info "Downloading and installing ExpanDrive..."
-    ORIGINAL_DIR=$(pwd)
-    TEMP_DIR=$(mktemp -d)
-    cd "$TEMP_DIR"
-
-    if wget -q --show-progress -O expandrive.rpm "https://www.expandrive.com/api/download/expandrive?platform=linux&ext=rpm"; then
-        log_info "Installing ExpanDrive..."
-        sudo dnf install -y ./expandrive.rpm
-        log_info "ExpanDrive installed successfully"
-    else
-        log_error "Failed to download ExpanDrive"
-        log_warn "Please download manually from: https://www.expandrive.com/desktop/linux/"
-    fi
-
-    cd "$ORIGINAL_DIR"
-    rm -rf "$TEMP_DIR"
-fi
 
 # ============================================================
 # kubectl (Kubernetes CLI)
@@ -479,36 +350,6 @@ EOF
     kubectl version --client
 fi
 
-# ============================================================
-# Freelens (Kubernetes IDE)
-# ============================================================
-log_step "Installing Freelens..."
-if command -v freelens &> /dev/null; then
-    log_info "Freelens is already installed. Skipping."
-else
-    log_info "Downloading and installing Freelens..."
-    ORIGINAL_DIR=$(pwd)
-    TEMP_DIR=$(mktemp -d)
-    cd "$TEMP_DIR"
-
-    # Get the latest Freelens release RPM for amd64
-    FREELENS_URL=$(curl -s https://api.github.com/repos/freelensapp/freelens/releases/latest | grep "browser_download_url.*amd64.rpm" | grep -v "sha256" | cut -d '"' -f 4)
-
-    if [ -z "$FREELENS_URL" ]; then
-        log_error "Failed to fetch Freelens download URL"
-        log_warn "Please download manually from: https://github.com/freelensapp/freelens/releases"
-    else
-        log_info "Downloading from: $FREELENS_URL"
-        wget -q --show-progress -O freelens.rpm "$FREELENS_URL"
-
-        log_info "Installing Freelens..."
-        sudo dnf install -y ./freelens.rpm
-        log_info "Freelens installed successfully"
-    fi
-
-    cd "$ORIGINAL_DIR"
-    rm -rf "$TEMP_DIR"
-fi
 
 # ============================================================
 # GitHub CLI Authentication
@@ -594,16 +435,20 @@ echo "  ✓ DisplayLink driver (if selected)"
 echo "  ✓ NVIDIA drivers (if applicable)"
 echo "  ✓ Google Chrome"
 echo "  ✓ Claude CLI"
-echo "  ✓ Visual Studio Code"
-echo "  ✓ JetBrains Toolbox"
-echo "  ✓ Meld"
-echo "  ✓ Discord"
-echo "  ✓ ExpanDrive"
 echo "  ✓ kubectl"
-echo "  ✓ Freelens"
 echo ""
 log_warn "IMPORTANT NOTES:"
 echo "  • If Docker was installed, log out and back in for group changes"
 echo "  • If NVIDIA drivers were installed, reboot your system"
+echo ""
+log_info "NEXT STEP:"
+echo "  • Run ./application-wizard.sh to install optional applications:"
+echo "    - Visual Studio Code"
+echo "    - JetBrains Toolbox"
+echo "    - Meld"
+echo "    - Discord"
+echo "    - ExpanDrive"
+echo "    - Freelens"
+echo "    - Surfshark VPN"
 echo ""
 log_info "Happy coding! 🚀"
