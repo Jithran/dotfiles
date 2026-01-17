@@ -247,6 +247,26 @@ install_freelens() {
     fi
 }
 
+install_ghostty() {
+    log_step "Installing Ghostty Terminal..."
+    if command -v ghostty &> /dev/null; then
+        log_info "Ghostty is already installed: $(ghostty --version 2>/dev/null || echo 'version unknown')"
+    else
+        log_info "Installing Ghostty from Copr repository..."
+
+        # Enable Copr repository for Ghostty
+        if ! dnf copr list | grep -q "pgdev/ghostty"; then
+            log_info "Enabling Copr repository pgdev/ghostty..."
+            sudo dnf copr enable -y pgdev/ghostty
+        fi
+
+        log_info "Installing Ghostty..."
+        sudo dnf install -y ghostty
+        log_info "Ghostty installed successfully"
+        log_info "You can start it by running 'ghostty' or searching in your application menu"
+    fi
+}
+
 # ============================================================
 # Add more application installation functions here
 # ============================================================
@@ -279,6 +299,7 @@ show_menu() {
     echo "  5) ExpanDrive - Mount cloud storage as local drives"
     echo "  6) Freelens - Kubernetes IDE"
     echo "  7) Surfshark VPN - Secure VPN service"
+    echo "  8) Ghostty - Fast, feature-rich terminal emulator"
     echo ""
     echo "  a) Install ALL applications"
     echo "  q) Quit without installing"
@@ -295,7 +316,7 @@ parse_selection() {
     selection=$(echo "$selection" | tr '[:upper:]' '[:lower:]')
 
     if [[ "$selection" == "a" ]]; then
-        apps=("vscode" "jetbrains_toolbox" "meld" "discord" "expandrive" "freelens" "surfshark")
+        apps=("vscode" "jetbrains_toolbox" "meld" "discord" "expandrive" "freelens" "surfshark" "ghostty")
     else
         # Parse individual selections
         for num in $selection; do
@@ -307,6 +328,7 @@ parse_selection() {
                 5) apps+=("expandrive") ;;
                 6) apps+=("freelens") ;;
                 7) apps+=("surfshark") ;;
+                8) apps+=("ghostty") ;;
                 *) log_warn "Invalid selection: $num" >&2 ;;
             esac
         done
@@ -364,6 +386,9 @@ install_selected_apps() {
                 ;;
             surfshark)
                 install_surfshark
+                ;;
+            ghostty)
+                install_ghostty
                 ;;
             # Add more cases here for new applications
             *)
