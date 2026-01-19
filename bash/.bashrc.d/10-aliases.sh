@@ -1,5 +1,6 @@
 # Application renaming
 alias vim="nvim"
+alias cd="z"
 
 # File listing
 alias ls="ls -hal --color=auto"
