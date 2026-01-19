@@ -11,3 +11,9 @@ batf() {
     local lang="${3:-log}"
     tail -n "$lines" -f -- "$file" | batcat --paging=never -l "$lang"
 }
+
+nf() {
+    local file
+    file=$(fzf --preview='bat {}') || return
+    "${EDITOR:-vim}" "$file"
+}
