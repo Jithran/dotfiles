@@ -1,5 +1,5 @@
 -- Mappings
-vim.keymap.set('i', 'jk', '<Esc>')
+-- vim.keymap.set('i', 'jk', '<Esc>')
 vim.keymap.set("n", "<leader>|", "<C-W>v", { desc = "Split Window Right", remap = true })
 vim.keymap.set("n", "<leader>-", "<C-W>s", { desc = "Split Window Bottom", remap = true })
 
