@@ -23,7 +23,7 @@ return {
             },
         })
 
-        vim.keymap.set("n", "<C-n>", ":Neotree<CR>", {})
+        vim.keymap.set("n", "<C-n>", ":Neotree reveal<CR>", {})
         vim.keymap.set("n", "<leader>bf", ":Neotree buffers reveal float<CR>", {})
         vim.cmd[[:Neotree show]]
     end,
