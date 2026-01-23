@@ -99,16 +99,16 @@ The wizard checks if tools are already installed and skips them, making it safe 
 | `<leader> Ctrl+g` | Open lazygit popup (80% screen) |
 
 ### Neovim
-**Leader Key:** `,`
+**Leader Key:** ` ` [space]
 **Local Leader Key:** `\`
 
 #### General
 | Shortcut | Description |
 |----------|-------------|
-| `jk` (insert mode) | Exit insert mode (alternative to ESC) |
 | `<leader>\|` | Split window right |
 | `<leader>-` | Split window bottom |
 | `<leader>f` | Format file and restore cursor position |
+| `<leader>lg` | Open lazygit neovim plugin |
 
 #### File Navigation (Telescope)
 | Shortcut | Description |
