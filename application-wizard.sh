@@ -249,6 +249,8 @@ install_freelens() {
 
 install_ghostty() {
     log_step "Installing Ghostty Terminal..."
+    local ghostty_newly_installed=false
+
     if command -v ghostty &> /dev/null; then
         log_info "Ghostty is already installed: $(ghostty --version 2>/dev/null || echo 'version unknown')"
     else
@@ -263,8 +265,62 @@ install_ghostty() {
         log_info "Installing Ghostty..."
         sudo dnf install -y ghostty
         log_info "Ghostty installed successfully"
-        log_info "You can start it by running 'ghostty' or searching in your application menu"
+        ghostty_newly_installed=true
     fi
+
+    # Ask to set as default terminal (for new installs)
+    if [ "$ghostty_newly_installed" = true ]; then
+        echo ""
+        read -p "Set Ghostty as default terminal? (Y/n): " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+            configure_ghostty_default
+        fi
+    fi
+}
+
+configure_ghostty_default() {
+    log_info "Configuring Ghostty as default terminal..."
+
+    # Detect desktop environment
+    DESKTOP_ENV="${XDG_CURRENT_DESKTOP:-unknown}"
+    log_info "Detected desktop environment: $DESKTOP_ENV"
+
+    case "$DESKTOP_ENV" in
+        *KDE*|*Plasma*)
+            # Set Ghostty as default terminal emulator for KDE
+            KDEGLOBALS="$HOME/.config/kdeglobals"
+            if [ -f "$KDEGLOBALS" ]; then
+                if grep -q "^\[General\]" "$KDEGLOBALS"; then
+                    if grep -q "^TerminalApplication=" "$KDEGLOBALS"; then
+                        sed -i 's/^TerminalApplication=.*/TerminalApplication=ghostty/' "$KDEGLOBALS"
+                    else
+                        sed -i '/^\[General\]/a TerminalApplication=ghostty' "$KDEGLOBALS"
+                    fi
+                else
+                    echo -e "\n[General]\nTerminalApplication=ghostty" >> "$KDEGLOBALS"
+                fi
+            else
+                mkdir -p "$(dirname "$KDEGLOBALS")"
+                echo -e "[General]\nTerminalApplication=ghostty" > "$KDEGLOBALS"
+            fi
+            log_info "Ghostty set as default terminal in KDE"
+            ;;
+        *GNOME*)
+            # For GNOME, set via gsettings if available
+            if command -v gsettings &> /dev/null; then
+                gsettings set org.gnome.desktop.default-applications.terminal exec 'ghostty' 2>/dev/null || true
+                gsettings set org.gnome.desktop.default-applications.terminal exec-arg '' 2>/dev/null || true
+                log_info "Ghostty set as default terminal in GNOME"
+            else
+                log_warn "gsettings not found - please set default terminal manually"
+            fi
+            ;;
+        *)
+            log_warn "Unknown desktop environment: $DESKTOP_ENV"
+            log_info "Please set Ghostty as default terminal manually in your system settings"
+            ;;
+    esac
 }
 
 # ============================================================
