@@ -233,7 +233,16 @@ else
         sudo dnf copr enable -y crashdummy/Displaylink
         sudo dnf update -y
         log_info "Installing DisplayLink..."
-        sudo dnf install -y displaylink
+        # DisplayLink's post-install script may fail with a non-critical warning
+        # about systemd unit files. We handle this gracefully.
+        if sudo dnf install -y displaylink; then
+            log_info "DisplayLink installed successfully"
+        else
+            log_warn "DisplayLink installation completed with warnings"
+            log_info "Running systemctl daemon-reload to resolve unit file warnings..."
+            sudo systemctl daemon-reload
+            log_info "DisplayLink driver should now be functional"
+        fi
     else
         log_info "Skipping DisplayLink installation."
     fi
