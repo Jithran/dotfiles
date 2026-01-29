@@ -7,6 +7,12 @@ vim.keymap.set("n", "<leader>o", ":update<cr> :so<cr>", { desc = "update file an
 vim.keymap.set("n", "<leader>wq", ":write<cr> :qa<cr>", { desc = "Write file and quit all" })
 vim.keymap.set("n", "<leader>q", ":qa<cr>", { desc = "quit all" })
 
+-- navigating shorts
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
+vim.keymap.set("n", "<C-f>", "<C-f>zz")
+vim.keymap.set("n", "<C-b>", "<C-b>zz")
+
 -- reformat file with current pointer memory
 vim.keymap.set('n', '<leader>f', function()
     local pos = vim.api.nvim_win_get_cursor(0)
