@@ -5,6 +5,7 @@ vim.keymap.set("n", "<leader>-", "<C-W>s", { desc = "Split Window Bottom", remap
 vim.keymap.set("n", "<leader><Space>", ":noh<CR>", { desc = "disable the highlighting of current text" })
 vim.keymap.set("n", "<leader>o", ":update<cr> :so<cr>", { desc = "update file and source" })
 vim.keymap.set("n", "<leader>wq", ":write<cr> :qa<cr>", { desc = "Write file and quit all" })
+vim.keymap.set("n", "<leader>q", ":qa<cr>", { desc = "quit all" })
 
 -- reformat file with current pointer memory
 vim.keymap.set('n', '<leader>f', function()
