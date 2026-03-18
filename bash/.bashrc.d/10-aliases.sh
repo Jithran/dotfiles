@@ -10,6 +10,16 @@ alias tree="tree -a -I '.git'"
 # Adding flags for security reasons
 alias mv="mv -i" # without the -i we risk overriding files when they already excist
 
+# Docker commands
+alias dcu="docker compose up"
+alias dcd="docker compose down"
+
+# Adding custom sail / laravel commands
+alias sail="bash vendor/bin/sail"
+alias pa="php artisan "
+alias sa="vendor/bin/sail artisan "
+alias phpunitt="vendor/phpunit/phpunit/phpunit "
+
 # On Ubuntu/Debian, bat is installed as batcat
 # On Fedora, it's just bat
 if command -v batcat &> /dev/null; then
