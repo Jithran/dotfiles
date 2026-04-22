@@ -7,6 +7,10 @@ alias ls="ls -hal --color=auto"
 alias fd="fd --hidden --exclude .git"
 alias tree="tree -a -I '.git'"
 
+#alias claude='claude-personal'
+alias claude-work='CLAUDE_CONFIG_DIR=~/.claude-work ~/.local/bin/claude'
+alias claude-personal='CLAUDE_CONFIG_DIR=~/.claude-personal ~/.local/bin/claude'
+
 # Adding flags for security reasons
 alias mv="mv -i" # without the -i we risk overriding files when they already excist
 
