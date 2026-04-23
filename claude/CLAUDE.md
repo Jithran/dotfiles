@@ -1,1 +1,1 @@
-@~/Nextcloud/secondbrain/CLAUDE.md
+Ik ben Jithran

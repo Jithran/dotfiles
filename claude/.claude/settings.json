@@ -1,4 +1,28 @@
 {
+  "hooks": {
+    "PermissionRequest": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cmd=$(jq -r '.tool_input.command // empty' 2>/dev/null); if echo \"$cmd\" | grep -qE '^\\s*(find|grep|rg|head|tail|cat|ls|wc|sort|uniq|awk|sed|cut|stat|file|which|du|df|ps|env|printenv|pwd|echo|diff|fd|bat|jq|less|more|md5sum|sha256sum|readlink|realpath|dirname|basename|tr|column|date|id|whoami|uname|lsof|ss|netstat|curl|wget)\\b'; then printf '{\"hookSpecificOutput\":{\"hookEventName\":\"PermissionRequest\",\"permissionDecision\":\"allow\"}}'; fi"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/session-start.sh\"",
+            "statusMessage": "Sessie-instructies laden..."
+          }
+        ]
+      }
+    ]
+  },
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/statusline-command.sh"
@@ -17,7 +41,16 @@
   },
   "permissions": {
     "allow": [
-      "Read(~/Nextcloud/secondbrain/**)"
+      "Read(~/Nextcloud/secondbrain/**)",
+      "Read(~/Nextcloud-syn/Shared/AI/**)",
+      "Bash(find **)",
+      "Bash(head **)",
+      "Bash(chmod +x *)",
+      "Bash(xargs ls *)",
+      "Skill(update-config)",
+      "mcp__plugin_context-mode_context-mode__ctx_batch_execute",
+      "mcp__plugin_context-mode_context-mode__ctx_search",
+      "mcp__plugin_context-mode_context-mode__ctx_execute_file"
     ]
   }
 }
