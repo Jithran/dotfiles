@@ -1,5 +1,15 @@
 {
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/session-start-menu.sh"
+          }
+        ]
+      }
+    ],
     "PermissionRequest": [
       {
         "matcher": "Bash",
@@ -10,25 +20,17 @@
           }
         ]
       }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash \"$HOME/.claude/session-start.sh\"",
-            "statusMessage": "Sessie-instructies laden..."
-          }
-        ]
-      }
     ]
   },
+  "autoMemoryEnabled": false,
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
-    "context-mode@context-mode": true
+    "context-mode@context-mode": true,
+    "skill-creator@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "context-mode": {
